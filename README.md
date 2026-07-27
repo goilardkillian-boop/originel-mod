@@ -78,7 +78,7 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 
 - [x] Etape 1 — Squelette du projet NeoForge
 - [x] Etape 2 — Systeme de configuration TOML + `/originel reload`
-- [ ] Etape 3 — Faction Hybride (l'Originel)
+- [x] Etape 3 — Faction Hybride (l'Originel)
 - [ ] Etape 4 — Progression par niveaux
 - [ ] Etape 5 — Arbre de competences
 - [ ] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel

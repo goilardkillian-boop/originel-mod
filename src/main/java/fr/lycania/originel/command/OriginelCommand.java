@@ -3,12 +3,17 @@ package fr.lycania.originel.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import fr.lycania.originel.OriginelMod;
 import fr.lycania.originel.config.GeneralConfig;
+import fr.lycania.originel.config.HybrideConfig;
 import fr.lycania.originel.config.OriginelConfig;
+import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -29,7 +34,15 @@ public final class OriginelCommand {
         return Commands.literal("originel")
                 .then(Commands.literal("reload")
                         .requires(OriginelCommand::isStaff)
-                        .executes(OriginelCommand::executeReload));
+                        .executes(OriginelCommand::executeReload))
+                .then(Commands.literal("set")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.argument("joueur", EntityArgument.player())
+                                .executes(OriginelCommand::executeSet)))
+                .then(Commands.literal("remove")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.argument("joueur", EntityArgument.player())
+                                .executes(OriginelCommand::executeRemove)));
     }
 
     static boolean isStaff(CommandSourceStack source) {
@@ -39,6 +52,29 @@ public final class OriginelCommand {
     private static int executeReload(CommandContext<CommandSourceStack> context) {
         OriginelConfig.reloadAll();
         context.getSource().sendSuccess(() -> OriginelText.prefixed("Configuration rechargee."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
+        HybrideFaction.AssignResult result = HybrideFaction.assign(target);
+        if (result == HybrideFaction.AssignResult.NOT_WHITELISTED) {
+            context.getSource().sendFailure(OriginelText.prefixed(
+                    "echec : " + target.getName().getString() + " n'est pas le joueur whitelist pour la faction Hybride."));
+            return 0;
+        }
+        target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().assignMessage()));
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(
+                target.getName().getString() + " est desormais l'Hybride."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
+        HybrideFaction.remove(target);
+        target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().removeMessage()));
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(
+                target.getName().getString() + " n'est plus l'Hybride."), true);
         return Command.SINGLE_SUCCESS;
     }
 }
