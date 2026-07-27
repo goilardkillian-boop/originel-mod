@@ -152,7 +152,13 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
 
     @Override
     public boolean canLeaveFaction() {
-        return false;
+        // Vampirism's FactionPlayerHandler#setFactionAndLevel checks this before
+        // allowing ANY leave/level-0 transition, including a staff-forced
+        // /originel remove - returning false here silently blocks that command
+        // (Vampirism logs a warning but the mod never sees an error), so this
+        // must stay true even though lore-wise the Hybride "shouldn't" be able
+        // to just walk away from the curse on their own.
+        return true;
     }
 
     @Override

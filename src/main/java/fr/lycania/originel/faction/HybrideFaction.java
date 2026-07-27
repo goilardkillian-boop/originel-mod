@@ -76,10 +76,19 @@ public final class HybrideFaction {
         return AssignResult.SUCCESS;
     }
 
-    public static void remove(ServerPlayer player) {
+    /**
+     * @return false if the player wasn't Hybride to begin with, or if Vampirism
+     * refused the transition (shouldn't happen now that
+     * {@link HybridePlayer#canLeaveFaction()} returns true, but checked instead
+     * of assumed since leaveFaction() itself returns void and always claims
+     * success client-side regardless of whether anything actually changed).
+     */
+    public static boolean remove(ServerPlayer player) {
         IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(player);
-        if (handler.getCurrentFaction() == HYBRIDE_FACTION) {
-            handler.leaveFaction(false);
+        if (handler.getCurrentFaction() != HYBRIDE_FACTION) {
+            return false;
         }
+        handler.leaveFaction(false);
+        return handler.getCurrentFaction() != HYBRIDE_FACTION;
     }
 }
