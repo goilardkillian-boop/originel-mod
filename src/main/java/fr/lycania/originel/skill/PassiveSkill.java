@@ -18,8 +18,8 @@ public class PassiveSkill extends Skill {
     private final Effect effect;
     private final Effect onRemove;
 
-    public PassiveSkill(String id, Branch branch, String displayName, IntSupplier costSupplier, Effect effect, Effect onRemove) {
-        super(id, branch, SkillType.PASSIVE, displayName, costSupplier, false);
+    public PassiveSkill(String id, Branch branch, IntSupplier costSupplier, Effect effect, Effect onRemove) {
+        super(id, branch, SkillType.PASSIVE, costSupplier, false);
         this.effect = effect;
         this.onRemove = onRemove;
     }

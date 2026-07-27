@@ -3,6 +3,7 @@
   "faction.originel.hybride.plural": "Hybrides",
   "item.originel.dague_originel": "Dague de l'Originel",
   "item.originel.dague_originel.tooltip": "La seule lame capable de blesser Corvin, l'Hybride.",
+  "item.originel.dague_originel.tooltip.ritual": "Accroupi + clic droit avec du Sang de Gardien en main secondaire pour l'imbiber.",
   "item.originel.pierre_clair_de_lune": "Pierre de Clair de Lune",
   "item.originel.sang_gardien": "Sang de Gardien",
   "item.originel.eclat_voile": "Eclat de Voile",
@@ -43,5 +44,59 @@
   "skill.originel.commandement.desc": "Marque une cible d'une lueur prolongee.",
 
   "skill.originel.colere_originel": "Colere de l'Originel",
-  "skill.originel.colere_originel.desc": "Dechaine temporairement la puissance des trois branches."
+  "skill.originel.colere_originel.desc": "Dechaine temporairement la puissance des trois branches.",
+
+  "originel.msg.reload_done": "Configuration rechargee.",
+  "originel.msg.not_whitelisted": "echec : %s n'est pas le joueur whitelist pour la faction Hybride.",
+  "originel.msg.set_success": "%s est desormais l'Hybride.",
+  "originel.msg.not_hybride": "%s n'est pas l'Hybride.",
+  "originel.msg.remove_success": "%s n'est plus l'Hybride.",
+  "originel.msg.level_set": "%s est maintenant niveau %s.",
+  "originel.msg.scellement_lore": "Un sceau se referme sur l'Originel. Sa faiblesse s'eveille.",
+  "originel.msg.scellement_success": "%s est scelle pour %ss.",
+  "originel.msg.lunerouge_already_active": "La Lune Rouge est deja active.",
+  "originel.msg.lunerouge_start": "La Lune Rouge se leve.",
+  "originel.msg.lunerouge_not_active": "La Lune Rouge n'est pas active.",
+  "originel.msg.lunerouge_stop": "La Lune Rouge s'eteint.",
+  "originel.msg.rituel_start_success": "Le Rituel d'Hybridation commence.",
+
+  "originel.msg.autel_component_deposited": "Un composant du rituel est depose sur l'autel.",
+  "originel.msg.autel_complete": " L'Autel du Voile est complet.",
+
+  "originel.msg.skill_unknown": "Competence inconnue : %s",
+  "originel.msg.skill_already_unlocked": "%s a deja debloque %s.",
+  "originel.msg.skill_requires_max_level": "%s necessite le niveau maximum (%s).",
+  "originel.msg.skill_not_enough_points": "Pas assez de points de competence (%s/%s).",
+  "originel.msg.skill_unlocked_target": "Competence debloquee : %s.",
+  "originel.msg.skill_unlocked_staff_feedback": "%s a debloque %s (points restants : %s).",
+
+  "originel.msg.regard_success": "Le regard de l'Originel paralyse %s.",
+  "originel.msg.regard_no_target": "Aucune cible dans le regard de l'Originel.",
+  "originel.msg.brume_success": "L'Originel se dissout en brume et se reforme plus loin.",
+  "originel.msg.griffes_success": "L'Originel bondit, griffes en avant.",
+  "originel.msg.metamorphose_on": "L'Originel abandonne son masque humain.",
+  "originel.msg.metamorphose_off": "L'Originel reprend forme humaine.",
+  "originel.msg.commandement_success": "%s est marque par l'Originel.",
+  "originel.msg.commandement_no_target": "Aucune cible pour le Commandement.",
+  "originel.msg.colere_success": "La Colere de l'Originel se dechaine !",
+
+  "originel.msg.impregnation_success": "La Dague de l'Originel s'imbibe de Sang de Gardien.",
+  "originel.msg.impregnation_already": "La Dague de l'Originel est deja imbibee de Sang de Gardien.",
+  "originel.msg.impregnation_not_enough_blood": "Il faut %s Sang de Gardien en main secondaire pour ce rituel.",
+
+  "originel.msg.give_simple": "%s remis a %s.",
+  "originel.msg.give_dague": "Dague de l'Originel remise a %s.",
+  "originel.msg.give_dague_imbibee": "Dague de l'Originel remise a %s (imbibee de Sang de Gardien).",
+  "originel.msg.give_carnet": "Carnet de Corvin remis a %s.",
+
+  "gui.originel.skill_tree.title": "Arbre de competences de l'Originel",
+  "gui.originel.skill_tree.points": "Points de competence : %s",
+  "gui.originel.skill_tree.unlocked_suffix": " (debloque)",
+  "gui.originel.skill_tree.requires_max_level": "Necessite le niveau maximum (%s).",
+  "gui.originel.skill_tree.not_enough_points": "Pas assez de points (cout %s).",
+  "branch.originel.sang": "Sang",
+  "branch.originel.lune": "Lune",
+  "branch.originel.originel": "Originel",
+  "branch.originel.ultime": "Ultime",
+  "key.originel.skill_tree": "Ouvrir l'arbre de competences"
 }

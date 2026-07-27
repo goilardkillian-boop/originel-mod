@@ -124,13 +124,15 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 9 — L'Anneau de Cendre
 - [x] Etape 10 — Aura d'Abomination, finitions, documentation
 - [x] Etape 11 — Roue de competences (interface radiale), touche dediee, textures amelioree
+- [x] Etape 12 — Nourriture au combat, rituel d'impregnation de sang, peur des mobs, arbre de competences joueur
 
 ## Limitations connues
 
-- L'arbre de competences (etape 5) reste pilote par commandes
-  (`/originel skill give|use`) pour le deblocage (reserve au staff), mais
-  l'activation des competences actives deja debloquees dispose en plus
-  (etape 11) d'une roue de selection radiale ouverte par une touche
+- L'arbre de competences (etape 5) dispose depuis l'etape 12 d'une
+  interface joueur en libre-service (touche dediee ou Carnet de Corvin
+  accroupi) en plus des commandes staff (`/originel skill give|use`),
+  et l'activation des competences actives deja debloquees dispose depuis
+  l'etape 11 d'une roue de selection radiale ouverte par une touche
   dediee, dans le meme esprit que le selecteur d'actions de Vampirism.
 - L'Autel du Voile (etape 8) est un bloc unique (avec un block entity a 4
   emplacements, un par composant), pas un vrai multibloc - fallback
@@ -205,6 +207,20 @@ staff) :
   connectable, seulement un serveur pilotable par commandes console (voir
   `testserver.sh`). Merci de tester en jeu et de signaler tout probleme de
   rendu/positionnement des secteurs.
+- **Etape 12** : compile (client + commun) et le serveur demarre sans
+  erreur avec le nouvel enregistrement reseau (`unlock_skill`) en place ;
+  `impregnation.toml` et les nouveaux champs de `skills.toml`
+  (`food_restore_percent`, `flee_*`) se generent avec les valeurs par
+  defaut attendues. Le rituel d'impregnation, la restauration de
+  nourriture sur la Morsure vampirique et la fuite des mobs a l'Aura
+  d'Abomination reposent sur les memes evenements NeoForge deja eprouves
+  ailleurs dans ce mod (`LivingDamageEvent.Post`, `PlayerInteractEvent.RightClickItem`,
+  `PlayerTickEvent.Post`) mais n'ont pas pu etre rejoues en jeu avec des
+  mobs Vampirism/Werewolves reels. Comme pour la roue et pour les memes
+  raisons d'environnement, le rendu effectif de l'arbre de competences
+  (positionnement des colonnes/boutons, lisibilite, reactivite au clic)
+  n'a **pas** pu etre verifie visuellement. Merci de tester en jeu et de
+  signaler tout probleme.
 
 **Limite assumee** : les mecaniques qui necessitent un vrai joueur en jeu
 exposé au soleil, frappé, physiquement proche d'un autre joueur, ou un rendu

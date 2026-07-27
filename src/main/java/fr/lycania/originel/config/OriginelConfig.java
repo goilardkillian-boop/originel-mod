@@ -15,7 +15,8 @@ public final class OriginelConfig {
             FaiblesseConfig.get(),
             LuneRougeConfig.get(),
             RituelConfig.get(),
-            CendreConfig.get()
+            CendreConfig.get(),
+            ImpregnationConfig.get()
     );
 
     private OriginelConfig() {

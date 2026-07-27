@@ -55,8 +55,8 @@ public final class OriginelGiveCommand {
     private static int giveSimple(CommandContext<CommandSourceStack> context, String name, net.minecraft.world.item.Item item) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         target.getInventory().placeItemBackInInventory(new ItemStack(item));
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                name + " remis a " + target.getName().getString() + "."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.give_simple", name, target.getName().getString())), true);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -67,9 +67,9 @@ public final class OriginelGiveCommand {
             stack.set(OriginelDataComponents.SANG_GARDIEN.get(), true);
         }
         target.getInventory().placeItemBackInInventory(stack);
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                "Dague de l'Originel remise a " + target.getName().getString()
-                        + (withSangGardien ? " (imbibee de Sang de Gardien)." : ".")), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                withSangGardien ? "originel.msg.give_dague_imbibee" : "originel.msg.give_dague",
+                target.getName().getString())), true);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -84,8 +84,8 @@ public final class OriginelGiveCommand {
                 RituelConfig.get().bookAuthor(),
                 0, pages, true));
         target.getInventory().placeItemBackInInventory(stack);
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                "Carnet de Corvin remis a " + target.getName().getString() + "."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.give_carnet", target.getName().getString())), true);
         return Command.SINGLE_SUCCESS;
     }
 }

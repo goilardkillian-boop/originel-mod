@@ -78,6 +78,10 @@ public final class HybrideSkillEventHandler {
             if (heal > 0) {
                 attacker.heal(heal);
             }
+            int foodPoints = Math.round(event.getNewDamage() * (float) SkillsConfig.get().morsureFoodRestore());
+            if (foodPoints > 0) {
+                attacker.getFoodData().eat(foodPoints, 1.0f);
+            }
         }
     }
 }

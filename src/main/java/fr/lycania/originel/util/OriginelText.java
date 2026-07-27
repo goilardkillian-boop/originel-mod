@@ -21,6 +21,10 @@ public final class OriginelText {
     }
 
     public static MutableComponent lore(String message) {
-        return Component.literal(message).withStyle(ChatFormatting.DARK_RED, ChatFormatting.ITALIC);
+        return lore(Component.literal(message));
+    }
+
+    public static MutableComponent lore(Component message) {
+        return message.copy().withStyle(ChatFormatting.DARK_RED, ChatFormatting.ITALIC);
     }
 }

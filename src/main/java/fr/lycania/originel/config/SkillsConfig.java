@@ -18,6 +18,7 @@ public final class SkillsConfig extends TomlConfigFile {
     private int regardCooldownTicks;
     private int morsureCost;
     private double morsureLifestealPercent;
+    private double morsureFoodRestore;
     private int morsureCooldownTicks;
     private int brumeCost;
     private double brumeDistance;
@@ -43,6 +44,9 @@ public final class SkillsConfig extends TomlConfigFile {
     private String auraSound;
     private int auraMalaiseDurationTicks;
     private int auraMalaiseAmplifier;
+    private int auraFleeSpeedAmplifier;
+    private double auraFleeKnockback;
+    private int auraFleeEffectDurationTicks;
     private int regenerationImpieCost;
     private int regenerationImpieAmplifier;
     private int metamorphoseCost;
@@ -86,6 +90,8 @@ public final class SkillsConfig extends TomlConfigFile {
         morsureCost = value(config, "sang.morsure_vampirique.cost", 1, "Cout en points de la Morsure vampirique.");
         morsureLifestealPercent = value(config, "sang.morsure_vampirique.lifesteal_percent", 0.5,
                 "Fraction des degats infliges rendue en vie par la Morsure vampirique.");
+        morsureFoodRestore = value(config, "sang.morsure_vampirique.food_restore_percent", 0.5,
+                "Fraction des degats infliges rendue en nourriture/saturation par la Morsure vampirique.");
         morsureCooldownTicks = value(config, "sang.morsure_vampirique.cooldown_ticks", 100,
                 "Delai de recharge (ticks) de la Morsure vampirique.");
 
@@ -125,6 +131,12 @@ public final class SkillsConfig extends TomlConfigFile {
                 "Duree (ticks) du malaise (Nausee) inflige aux cibles de l'Aura d'Abomination.");
         auraMalaiseAmplifier = value(config, "originel.aura_abomination.malaise_amplifier", 0,
                 "Amplificateur de la Nausee infligee par l'Aura d'Abomination (0 = niveau I).");
+        auraFleeSpeedAmplifier = value(config, "originel.aura_abomination.flee_speed_amplifier", 1,
+                "Amplificateur de Vitesse (0 = niveau I) applique aux mobs vampires/loups-garous qui fuient l'Aura d'Abomination.");
+        auraFleeKnockback = value(config, "originel.aura_abomination.flee_knockback", 0.6,
+                "Force de la poussee initiale infligee aux mobs vampires/loups-garous a l'oppose de l'Hybride.");
+        auraFleeEffectDurationTicks = value(config, "originel.aura_abomination.flee_effect_duration_ticks", 100,
+                "Duree (ticks) de l'effet de Vitesse infligeant la fuite aux mobs vampires/loups-garous.");
 
         regenerationImpieCost = value(config, "originel.regeneration_impie.cost", 1, "Cout en points de la Regeneration impie.");
         regenerationImpieAmplifier = value(config, "originel.regeneration_impie.amplifier", 0,
@@ -188,6 +200,10 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public double morsureLifestealPercent() {
         return morsureLifestealPercent;
+    }
+
+    public double morsureFoodRestore() {
+        return morsureFoodRestore;
     }
 
     public int morsureCooldownTicks() {
@@ -272,6 +288,18 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public int auraMalaiseAmplifier() {
         return auraMalaiseAmplifier;
+    }
+
+    public int auraFleeSpeedAmplifier() {
+        return auraFleeSpeedAmplifier;
+    }
+
+    public double auraFleeKnockback() {
+        return auraFleeKnockback;
+    }
+
+    public int auraFleeEffectDurationTicks() {
+        return auraFleeEffectDurationTicks;
     }
 
     public int regenerationImpieCost() {

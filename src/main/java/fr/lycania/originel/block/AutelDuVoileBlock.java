@@ -2,6 +2,8 @@ package fr.lycania.originel.block;
 
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -53,8 +55,11 @@ public class AutelDuVoileBlock extends BaseEntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (altar.tryInsert(heldStack)) {
-            player.sendSystemMessage(OriginelText.prefixed("Un composant du rituel est depose sur l'autel."
-                    + (altar.isComplete() ? " L'Autel du Voile est complet." : "")));
+            MutableComponent message = Component.translatable("originel.msg.autel_component_deposited");
+            if (altar.isComplete()) {
+                message = message.append(Component.translatable("originel.msg.autel_complete"));
+            }
+            player.sendSystemMessage(OriginelText.prefixed(message));
             return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
