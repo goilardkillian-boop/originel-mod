@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @EventBusSubscriber(modid = OriginelMod.MODID)
 public final class HybrideLevelHandler {
@@ -50,6 +51,24 @@ public final class HybrideLevelHandler {
                 clearPassiveSkills(serverPlayer);
             }
         }
+    }
+
+    /**
+     * Respawn (and dimension change) replaces the ServerPlayer instance
+     * entirely - the new entity starts with default vanilla attributes, and
+     * FactionLevelChanged only fires when the level actually changes, so
+     * without this the level-based bonuses (bonus hearts included) silently
+     * vanish on death. Also tops health back up to the restored max so the
+     * player doesn't respawn with the bonus hearts present but empty.
+     */
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        if (!(event.getEntity() instanceof ServerPlayer player) || !HybrideFaction.isHybride(player)) {
+            return;
+        }
+        int level = VampirismAPI.factionPlayerHandler(player).getCurrentLevel(HybrideFaction.get());
+        applyLevelStats(player, level);
+        player.setHealth(player.getMaxHealth());
     }
 
     private static void clearPassiveSkills(ServerPlayer player) {

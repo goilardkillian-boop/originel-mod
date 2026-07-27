@@ -12,11 +12,13 @@ import com.mojang.math.Axis;
 import fr.lycania.originel.config.LuneRougeConfig;
 import fr.lycania.originel.redmoon.RedMoonState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import org.joml.Matrix4f;
@@ -28,6 +30,15 @@ import org.joml.Matrix4f;
  * NeoForge AFTER_SKY stage - and the fog color is nudged red the same way
  * the Nether's own fog is tinted (ViewportEvent.ComputeFogColor). Registered
  * manually in OriginelModClient, never touched on a dedicated server.
+ * <p>
+ * All three 3D hooks (moon overlay, fog color, fog distance) no-op while a
+ * shaderpack is active (see IrisCompat) - shaderpacks compute their own sky
+ * color and celestial positions in their fragment shaders, ignoring vanilla's
+ * fog uniform entirely and rendering their own moon at a different position
+ * than the vanilla sky dome we draw onto, which is what made the overlay look
+ * misaligned. onScreenTint below is the shader-safe fallback: a flat 2D
+ * overlay drawn after everything else, immune to whatever the 3D pipeline (or
+ * a shaderpack replacing it) is doing.
  */
 public final class RedMoonSkyRenderer {
 
@@ -36,13 +47,17 @@ public final class RedMoonSkyRenderer {
     private RedMoonSkyRenderer() {
     }
 
+    private static boolean skyTintActive(LuneRougeConfig cfg) {
+        return RedMoonState.isActive() && cfg.skyTintEnabled() && !IrisCompat.shaderPackActive();
+    }
+
     @SubscribeEvent
     public static void onRenderSky(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_SKY) {
             return;
         }
         LuneRougeConfig cfg = LuneRougeConfig.get();
-        if (!RedMoonState.isActive() || !cfg.skyTintEnabled()) {
+        if (!skyTintActive(cfg)) {
             return;
         }
         ClientLevel level = Minecraft.getInstance().level;
@@ -93,7 +108,7 @@ public final class RedMoonSkyRenderer {
     @SubscribeEvent
     public static void onRenderFog(ViewportEvent.RenderFog event) {
         LuneRougeConfig cfg = LuneRougeConfig.get();
-        if (!RedMoonState.isActive() || !cfg.skyTintEnabled()) {
+        if (!skyTintActive(cfg)) {
             return;
         }
         ClientLevel level = Minecraft.getInstance().level;
@@ -110,7 +125,7 @@ public final class RedMoonSkyRenderer {
     @SubscribeEvent
     public static void onFogColor(ViewportEvent.ComputeFogColor event) {
         LuneRougeConfig cfg = LuneRougeConfig.get();
-        if (!RedMoonState.isActive() || !cfg.skyTintEnabled()) {
+        if (!skyTintActive(cfg)) {
             return;
         }
         ClientLevel level = Minecraft.getInstance().level;
@@ -122,6 +137,28 @@ public final class RedMoonSkyRenderer {
         event.setRed(lerp(event.getRed(), (float) cfg.fogRed(), strength));
         event.setGreen(lerp(event.getGreen(), (float) cfg.fogGreen(), strength));
         event.setBlue(lerp(event.getBlue(), (float) cfg.fogBlue(), strength));
+    }
+
+    /** Shader-safe fallback: a flat full-screen tint, drawn after the HUD, immune to shaderpacks replacing 3D sky rendering. */
+    @SubscribeEvent
+    public static void onScreenTint(RenderGuiEvent.Post event) {
+        LuneRougeConfig cfg = LuneRougeConfig.get();
+        if (!RedMoonState.isActive() || !cfg.skyTintEnabled() || !cfg.shaderFallbackEnabled() || !IrisCompat.shaderPackActive()) {
+            return;
+        }
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.level.effects().skyType() != DimensionSpecialEffects.SkyType.NORMAL) {
+            return;
+        }
+
+        int alpha = (int) (Math.max(0.0, Math.min(1.0, cfg.screenTintAlpha())) * 255) << 24;
+        int red = (int) (Math.max(0.0, Math.min(1.0, cfg.screenTintRed())) * 255) << 16;
+        int green = (int) (Math.max(0.0, Math.min(1.0, cfg.screenTintGreen())) * 255) << 8;
+        int blue = (int) (Math.max(0.0, Math.min(1.0, cfg.screenTintBlue())) * 255);
+        int color = alpha | red | green | blue;
+
+        GuiGraphics graphics = event.getGuiGraphics();
+        graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), color);
     }
 
     private static float lerp(float from, float to, float t) {
