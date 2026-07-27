@@ -77,7 +77,7 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 ## Etat d'avancement
 
 - [x] Etape 1 — Squelette du projet NeoForge
-- [ ] Etape 2 — Systeme de configuration TOML + `/originel reload`
+- [x] Etape 2 — Systeme de configuration TOML + `/originel reload`
 - [ ] Etape 3 — Faction Hybride (l'Originel)
 - [ ] Etape 4 — Progression par niveaux
 - [ ] Etape 5 — Arbre de competences
