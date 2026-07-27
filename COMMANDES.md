@@ -54,12 +54,17 @@ sur les Griffes, fumee lors de la Metamorphose, marquage lumineux du
 Commandement, flammes et eclats pour la Colere de l'Originel, et une gerbe
 rouge sur chaque coup vole par la Morsure vampirique. L'Hybride laisse aussi
 une legere trainee de brume derriere lui en se deplacant (`hybride.toml#visuals`,
-desactivable). Rien de tout ca n'est verifiable visuellement dans
-l'environnement de developpement de ce mod - voir README.
+desactivable). Pendant la Lune Rouge, le ciel (brouillard) et la lune
+elle-meme sont teintes de rouge sang cote client (`lunerouge.toml#sky`,
+couleurs et intensite configurables, desactivable via `sky.tint_enabled`) -
+la lune est redessinee par-dessus celle de vanilla (pas de mixin), et le
+brouillard est melange vers la couleur configuree. Rien de tout ca n'est
+verifiable visuellement dans l'environnement de developpement de ce mod -
+voir README.
 
 ## Arbre de competences
 
-Identifiants des 13 competences (+ 1 ultime) utilisables avec `skill give`/`skill use`,
+Identifiants des 15 competences (+ 1 ultime) utilisables avec `skill give`/`skill use`,
 tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 
 | Branche | Competence (id) | Type | Effet |
@@ -68,13 +73,15 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 | Sang | `regard_hypnotique` | Active | Ralentit la cible visee |
 | Sang | `morsure_vampirique` | Passive | Vol de vie et de nourriture/saturation au corps a corps |
 | Sang | `brume` | Active | Court teleport dans la direction du regard |
+| Sang | `odorat_sang` | Passive | Met en surbrillance toute creature en dessous d'un seuil de vie a portee |
 | Lune | `force_bestiale` | Passive | Degats d'attaque augmentes en permanence |
 | Lune | `sens_aiguises` | Passive | Vision nocturne + entites proches surlignees |
 | Lune | `griffes` | Active | Bond griffu, saignement autour de l'impact |
 | Lune | `peau_de_bete` | Passive | Degats subis reduits en permanence |
-| Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee, et fait fuir les mobs vampires/loups-garous a portee (voir plus bas) |
-| Originel | `regeneration_impie` | Passive | Regeneration de vie en continu |
-| Originel | `metamorphose` | Active | Bascule un etat "transforme" (interne) |
+| Lune | `hurlement_meute` | Active | Effraie (Faiblesse + Lenteur) les monstres hostiles a portee, buff de vitesse/force pour soi |
+| Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee, et fait fuir les mobs vampires/loups-garous a portee (voir plus bas). Actif uniquement masque retire (Metamorphose) |
+| Originel | `regeneration_impie` | Passive | Regeneration de vie en continu. Actif uniquement masque porte (Metamorphose) |
+| Originel | `metamorphose` | Active | Retire ou remet le masque humain : masque porte = invincible (Faiblesse Cachee) et regen, masque retire = degats reels mais Aura d'Abomination active |
 | Originel | `commandement` | Active | Marque la cible visee d'une lueur prolongee |
 | Ultime (niveau max) | `colere_originel` | Active | Buff temporaire cumulant les bonus des trois branches |
 
@@ -123,6 +130,29 @@ en grille (une colonne par branche), affichant toutes les competences
 Comme pour la roue, le rendu reel (positionnement des colonnes, lisibilite,
 reactivite au clic) n'a pas pu etre verifie visuellement dans cet
 environnement de developpement.
+
+## Faiblesse Cachee (invincibilite)
+
+Masque porte (etat par defaut, voir Metamorphose plus haut), l'Hybride est
+immunise a tous les degats (ricochet + son/particule), a une exception
+pres : **toutes** les conditions activees dans `faiblesse.toml` doivent
+etre reunies **en meme temps** au moment du coup pour que les degats
+passent (multiplies par `damage_multiplier`) :
+
+1. L'attaquant tient la Dague de l'Originel Ecarlate (imbibee, voir
+   rituel d'impregnation ci-dessous) en main principale.
+2. L'Hybride porte le marqueur de scellement, pose par le staff via
+   `/originel scellement <joueur>` et qui expire au bout de
+   `faiblesse.toml#scellement_duration_ticks` (5 minutes par defaut) -
+   **cette etape est facile a oublier** : sans elle, une dague imbibee
+   frappee en pleine lune ne fait toujours rien.
+3. C'est la pleine lune ou la Lune Rouge est active (selon les conditions
+   activees dans la config).
+
+Chacune de ces conditions peut etre desactivee individuellement dans
+`faiblesse.toml#conditions`. Masque retire, l'invincibilite (et donc toute
+cette mecanique) ne s'applique plus du tout : les degats passent normalement,
+quelle que soit l'arme (voir Metamorphose).
 
 ## Rituel d'impregnation de sang (Dague de l'Originel)
 

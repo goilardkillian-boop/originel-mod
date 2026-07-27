@@ -16,6 +16,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -27,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * All 13 Hybride skills plus the ultimate. Structure (branch, cost, cooldowns,
+ * All 15 Hybride skills plus the ultimate. Structure (branch, cost, cooldowns,
  * magnitudes) is entirely driven by skills.toml via SkillsConfig; only the
  * mechanism of each effect is code.
  */
@@ -108,6 +109,17 @@ public final class SkillRegistry {
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.brume_success")));
                 }, false));
 
+        register(new PassiveSkill("odorat_sang", Branch.SANG, cfg::odoratSangCost,
+                (player, data) -> {
+                    double threshold = cfg.odoratSangHealthThreshold();
+                    for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
+                            player.getBoundingBox().inflate(cfg.odoratSangRadius()),
+                            e -> e != player && e.isAlive() && e.getHealth() / e.getMaxHealth() <= threshold)) {
+                        nearby.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, true, false));
+                    }
+                },
+                null));
+
         // --- Branche Lune ---
         register(new PassiveSkill("force_bestiale", Branch.LUNE, cfg::forceBestialeCost,
                 (player, data) -> {
@@ -151,6 +163,19 @@ public final class SkillRegistry {
 
         register(new Skill("peau_de_bete", Branch.LUNE, SkillType.PASSIVE, cfg::peauDeBeteCost, false) {
         });
+
+        register(new ActiveSkill("hurlement_meute", Branch.LUNE, cfg::hurlementCost, cfg::hurlementCooldownTicks,
+                (player, data) -> {
+                    particles(player, player.position().add(0, player.getBbHeight() * 0.5, 0), ParticleTypes.SWEEP_ATTACK, 6, 0.4, 0.05);
+                    for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
+                            player.getBoundingBox().inflate(cfg.hurlementRadius()), e -> e instanceof Monster && e.isAlive())) {
+                        nearby.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, cfg.hurlementFearDurationTicks(), cfg.hurlementFearAmplifier()));
+                        nearby.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, cfg.hurlementFearDurationTicks(), cfg.hurlementFearAmplifier()));
+                    }
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, cfg.hurlementSelfBuffDurationTicks(), cfg.hurlementSelfBuffAmplifier(), true, false));
+                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, cfg.hurlementSelfBuffDurationTicks(), cfg.hurlementSelfBuffAmplifier(), true, false));
+                    player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.hurlement_success")));
+                }, false));
 
         // --- Branche Originel ---
         register(new Skill("aura_abomination", Branch.ORIGINEL, SkillType.PASSIVE, cfg::auraCost, false) {

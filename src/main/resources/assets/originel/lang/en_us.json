@@ -32,6 +32,8 @@
   "skill.originel.morsure_vampirique.desc": "Vole de la vie au corps a corps.",
   "skill.originel.brume": "Brume",
   "skill.originel.brume.desc": "Dissout l'Originel en brume, le reformant plus loin.",
+  "skill.originel.odorat_sang": "Odorat du sang",
+  "skill.originel.odorat_sang.desc": "Reperes toute creature blessee a proximite, comme le sang appelle le predateur.",
 
   "skill.originel.force_bestiale": "Force bestiale",
   "skill.originel.force_bestiale.desc": "Augmente les degats d'attaque en permanence.",
@@ -41,6 +43,8 @@
   "skill.originel.griffes.desc": "Bond griffu infligeant un saignement autour de l'impact.",
   "skill.originel.peau_de_bete": "Peau de bete",
   "skill.originel.peau_de_bete.desc": "Reduit les degats subis en permanence.",
+  "skill.originel.hurlement_meute": "Hurlement de meute",
+  "skill.originel.hurlement_meute.desc": "Un hurlement ancestral effraie les monstres proches et galvanise l'Originel.",
 
   "skill.originel.aura_abomination": "Aura d'Abomination",
   "skill.originel.aura_abomination.desc": "Un malaise glacial trahit sa presence aux creatures proches. Actif uniquement masque retire.",
@@ -82,6 +86,7 @@
   "originel.msg.regard_no_target": "Aucune cible dans le regard de l'Originel.",
   "originel.msg.brume_success": "L'Originel se dissout en brume et se reforme plus loin.",
   "originel.msg.griffes_success": "L'Originel bondit, griffes en avant.",
+  "originel.msg.hurlement_success": "Un hurlement ancestral dechire la nuit.",
   "originel.msg.metamorphose_on": "L'Originel abandonne son masque humain.",
   "originel.msg.metamorphose_off": "L'Originel reprend forme humaine.",
   "originel.msg.commandement_success": "%s est marque par l'Originel.",

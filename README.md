@@ -127,6 +127,7 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 12 — Nourriture au combat, rituel d'impregnation de sang, peur des mobs, arbre de competences joueur
 - [x] Etape 12 (suite) — Fuite persistante des mobs (AvoidEntityGoal), effets de particules sur les competences et trainee de brume, points de competence suffisants pour tout debloquer au niveau max
 - [x] Etape 12 (suite) — Texture et nom distincts pour la Dague de l'Originel une fois imbibee, lore sur chaque item, mod entierement en francais quelle que soit la langue du client
+- [x] Etape 13 — Metamorphose (masque humain protecteur vs forme originelle exposee, vrai tradeoff pour la Faiblesse Cachee/Regeneration impie/Aura d'Abomination), ciel et lune teintes de rouge sang pendant la Lune Rouge, deux nouvelles competences (Odorat du sang, Hurlement de meute)
 
 ## Limitations connues
 

@@ -5,12 +5,14 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.werewolves.api.WReference;
 import fr.lycania.originel.OriginelMod;
 import fr.lycania.originel.config.LuneRougeConfig;
+import fr.lycania.originel.network.ClientboundRedMoonStatePacket;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -18,7 +20,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = OriginelMod.MODID)
 public final class RedMoonManager {
@@ -54,6 +58,7 @@ public final class RedMoonManager {
         wasNight = true;
         activatedAtTick = server.getTickCount();
         RedMoonState.setActive(true);
+        PacketDistributor.sendToAllPlayers(new ClientboundRedMoonStatePacket(true));
         server.getPlayerList().broadcastSystemMessage(OriginelText.lore(LuneRougeConfig.get().messageStart()), false);
         if (LuneRougeConfig.get().creatureBonusEnabled()) {
             forEachCreature(server, RedMoonManager::applyCreatureBonus);
@@ -66,9 +71,17 @@ public final class RedMoonManager {
             return;
         }
         RedMoonState.setActive(false);
+        PacketDistributor.sendToAllPlayers(new ClientboundRedMoonStatePacket(false));
         server.getPlayerList().broadcastSystemMessage(OriginelText.lore(LuneRougeConfig.get().messageEnd()), false);
         forEachCreature(server, RedMoonManager::clearCreatureBonus);
         OriginelMod.LOGGER.info("La Lune Rouge s'eteint avec l'aube.");
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            PacketDistributor.sendToPlayer(player, new ClientboundRedMoonStatePacket(RedMoonState.isActive()));
+        }
     }
 
     @SubscribeEvent
