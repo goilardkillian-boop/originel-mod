@@ -15,9 +15,11 @@ import fr.lycania.originel.config.OriginelConfig;
 import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.faction.HybridePlayer;
+import fr.lycania.originel.config.RituelConfig;
 import fr.lycania.originel.item.OriginelGiveCommand;
 import fr.lycania.originel.redmoon.RedMoonManager;
 import fr.lycania.originel.redmoon.RedMoonState;
+import fr.lycania.originel.ritual.RitualManager;
 import fr.lycania.originel.skill.HybrideSkillCommand;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
@@ -68,7 +70,10 @@ public final class OriginelCommand {
                 .then(Commands.literal("lunerouge")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.literal("start").executes(OriginelCommand::executeLuneRougeStart))
-                        .then(Commands.literal("stop").executes(OriginelCommand::executeLuneRougeStop)));
+                        .then(Commands.literal("stop").executes(OriginelCommand::executeLuneRougeStop)))
+                .then(Commands.literal("rituel")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.literal("start").executes(OriginelCommand::executeRituelStart)));
     }
 
     static boolean isStaff(CommandSourceStack source) {
@@ -153,6 +158,23 @@ public final class OriginelCommand {
         }
         RedMoonManager.stop(context.getSource().getServer());
         context.getSource().sendSuccess(() -> OriginelText.prefixed("La Lune Rouge s'eteint."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeRituelStart(CommandContext<CommandSourceStack> context) {
+        RitualManager.StartResult result = RitualManager.start(context.getSource().getServer());
+        String message = switch (result) {
+            case SUCCESS -> null;
+            case NOT_WHITELISTED -> RituelConfig.get().messageFailNotWhitelisted();
+            case PLAYER_OFFLINE -> RituelConfig.get().messageFailPlayerOffline();
+            case ALREADY_HYBRIDE -> RituelConfig.get().messageFailAlreadyHybride();
+            case NO_ALTAR -> RituelConfig.get().messageFailNoAltar();
+        };
+        if (message != null) {
+            context.getSource().sendFailure(OriginelText.prefixed(message));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> OriginelText.prefixed("Le Rituel d'Hybridation commence."), true);
         return Command.SINGLE_SUCCESS;
     }
 }

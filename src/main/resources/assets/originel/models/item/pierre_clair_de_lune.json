@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "originel:item/pierre_clair_de_lune"
+  }
+}

@@ -83,7 +83,7 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 - [x] Etape 5 — Arbre de competences (pilote par commandes, `skills.toml`)
 - [x] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel
 - [x] Etape 7 — La Lune Rouge
-- [ ] Etape 8 — Le Rituel d'Hybridation
+- [x] Etape 8 — Le Rituel d'Hybridation (Autel du Voile a bloc unique)
 - [ ] Etape 9 — L'Anneau de Cendre
 - [ ] Etape 10 — Aura d'Abomination, finitions, documentation
 
@@ -93,6 +93,9 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
   (`/originel skill give|use`) plutot que par l'ecran de competences natif
   de Vampirism, pour rester simple et testable sans client graphique
   (voir le message de commit de l'etape 5 pour le detail du choix).
+- L'Autel du Voile (etape 8) est un bloc unique (avec un block entity a 4
+  emplacements, un par composant), pas un vrai multibloc - fallback
+  explicitement autorise par le cahier des charges.
 - L'ambiance visuelle de la Lune Rouge (etape 7) repose sur des particules
   et un message, pas sur une reelle teinte du ciel/de la lune (qui
   demanderait des hooks de rendu client difficiles a verifier dans

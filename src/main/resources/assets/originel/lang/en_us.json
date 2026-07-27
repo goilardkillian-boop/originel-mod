@@ -2,5 +2,10 @@
   "faction.originel.hybride": "Hybrid",
   "faction.originel.hybride.plural": "Hybrids",
   "item.originel.dague_originel": "Dagger of the Originel",
-  "item.originel.dague_originel.tooltip": "The only blade capable of wounding Corvin, the Hybrid."
+  "item.originel.dague_originel.tooltip": "The only blade capable of wounding Corvin, the Hybrid.",
+  "item.originel.pierre_clair_de_lune": "Moonlight Stone",
+  "item.originel.sang_gardien": "Guardian's Blood",
+  "item.originel.eclat_voile": "Veil Shard",
+  "item.originel.carnet_corvin": "Corvin's Notebook",
+  "block.originel.autel_du_voile": "Altar of the Veil"
 }
