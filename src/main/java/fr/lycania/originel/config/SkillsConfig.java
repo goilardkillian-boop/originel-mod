@@ -44,9 +44,8 @@ public final class SkillsConfig extends TomlConfigFile {
     private String auraSound;
     private int auraMalaiseDurationTicks;
     private int auraMalaiseAmplifier;
-    private int auraFleeSpeedAmplifier;
-    private double auraFleeKnockback;
-    private int auraFleeEffectDurationTicks;
+    private double auraFleeWalkSpeedModifier;
+    private double auraFleeSprintSpeedModifier;
     private int regenerationImpieCost;
     private int regenerationImpieAmplifier;
     private int metamorphoseCost;
@@ -71,8 +70,10 @@ public final class SkillsConfig extends TomlConfigFile {
 
     @Override
     protected void reload(CommentedFileConfig config) {
-        pointsPerLevel = value(config, "general.points_per_level", 1,
-                "Nombre de points de competence accordes par niveau d'Hybride gagne.");
+        pointsPerLevel = value(config, "general.points_per_level", 2,
+                "Nombre de points de competence accordes par niveau d'Hybride gagne. "
+                        + "Avec 2 par niveau et 14 niveaux (hybride.toml#progression.max_level), "
+                        + "un Hybride au niveau maximum peut debloquer les 13 competences (cout total 15).");
 
         velociteCost = value(config, "sang.velocite.cost", 1, "Cout en points de la competence Velocite.");
         veloviteSpeedBonus = value(config, "sang.velocite.speed_bonus", 0.15,
@@ -131,12 +132,10 @@ public final class SkillsConfig extends TomlConfigFile {
                 "Duree (ticks) du malaise (Nausee) inflige aux cibles de l'Aura d'Abomination.");
         auraMalaiseAmplifier = value(config, "originel.aura_abomination.malaise_amplifier", 0,
                 "Amplificateur de la Nausee infligee par l'Aura d'Abomination (0 = niveau I).");
-        auraFleeSpeedAmplifier = value(config, "originel.aura_abomination.flee_speed_amplifier", 1,
-                "Amplificateur de Vitesse (0 = niveau I) applique aux mobs vampires/loups-garous qui fuient l'Aura d'Abomination.");
-        auraFleeKnockback = value(config, "originel.aura_abomination.flee_knockback", 0.6,
-                "Force de la poussee initiale infligee aux mobs vampires/loups-garous a l'oppose de l'Hybride.");
-        auraFleeEffectDurationTicks = value(config, "originel.aura_abomination.flee_effect_duration_ticks", 100,
-                "Duree (ticks) de l'effet de Vitesse infligeant la fuite aux mobs vampires/loups-garous.");
+        auraFleeWalkSpeedModifier = value(config, "originel.aura_abomination.flee_walk_speed_modifier", 1.3,
+                "Multiplicateur de vitesse de deplacement des mobs vampires/loups-garous qui fuient l'Aura d'Abomination.");
+        auraFleeSprintSpeedModifier = value(config, "originel.aura_abomination.flee_sprint_speed_modifier", 1.6,
+                "Multiplicateur de vitesse de course des mobs vampires/loups-garous qui fuient l'Aura d'Abomination a courte distance.");
 
         regenerationImpieCost = value(config, "originel.regeneration_impie.cost", 1, "Cout en points de la Regeneration impie.");
         regenerationImpieAmplifier = value(config, "originel.regeneration_impie.amplifier", 0,
@@ -290,16 +289,12 @@ public final class SkillsConfig extends TomlConfigFile {
         return auraMalaiseAmplifier;
     }
 
-    public int auraFleeSpeedAmplifier() {
-        return auraFleeSpeedAmplifier;
+    public double auraFleeWalkSpeedModifier() {
+        return auraFleeWalkSpeedModifier;
     }
 
-    public double auraFleeKnockback() {
-        return auraFleeKnockback;
-    }
-
-    public int auraFleeEffectDurationTicks() {
-        return auraFleeEffectDurationTicks;
+    public double auraFleeSprintSpeedModifier() {
+        return auraFleeSprintSpeedModifier;
     }
 
     public int regenerationImpieCost() {

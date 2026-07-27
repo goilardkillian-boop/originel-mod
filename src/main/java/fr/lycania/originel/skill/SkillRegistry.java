@@ -6,8 +6,11 @@ import fr.lycania.originel.faction.HybridePlayer;
 import fr.lycania.originel.util.OriginelText;
 import fr.lycania.originel.util.TargetingUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -81,6 +84,8 @@ public final class SkillRegistry {
                     if (target.isPresent()) {
                         target.get().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
                                 cfg.regardDurationTicks(), cfg.regardSlownessAmplifier()));
+                        particles(player, new Vec3(target.get().getX(), target.get().getEyeY(), target.get().getZ()),
+                                ParticleTypes.SOUL, 12, 0.25, 0.01);
                         player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
                                 "originel.msg.regard_success", target.get().getName().getString())));
                     } else {
@@ -93,10 +98,13 @@ public final class SkillRegistry {
 
         register(new ActiveSkill("brume", Branch.SANG, cfg::brumeCost, cfg::brumeCooldownTicks,
                 (player, data) -> {
+                    Vec3 origin = player.position();
                     Vec3 look = player.getLookAngle();
+                    particles(player, origin.add(0, 1, 0), ParticleTypes.CLOUD, 30, 0.4, 0.06);
                     player.teleportTo(player.getX() + look.x * cfg.brumeDistance(),
                             player.getY() + Math.max(0, look.y) * cfg.brumeDistance() * 0.3,
                             player.getZ() + look.z * cfg.brumeDistance());
+                    particles(player, player.position().add(0, 1, 0), ParticleTypes.CLOUD, 30, 0.4, 0.06);
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.brume_success")));
                 }, false));
 
@@ -130,11 +138,13 @@ public final class SkillRegistry {
         register(new ActiveSkill("griffes", Branch.LUNE, cfg::griffesCost, cfg::griffesCooldownTicks,
                 (player, data) -> {
                     Vec3 look = player.getLookAngle();
+                    particles(player, player.position().add(0, 0.2, 0), ParticleTypes.POOF, 16, 0.3, 0.05);
                     player.setDeltaMovement(look.x * cfg.griffesLeapStrength(), Math.max(0.3, look.y * cfg.griffesLeapStrength()), look.z * cfg.griffesLeapStrength());
                     player.hurtMarked = true;
                     for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
                             player.getBoundingBox().inflate(3.0), e -> e != player && e.isAlive())) {
                         nearby.addEffect(new MobEffectInstance(MobEffects.POISON, cfg.griffesBleedDurationTicks(), 0));
+                        particles(player, nearby.position().add(0, nearby.getBbHeight() * 0.5, 0), ParticleTypes.CRIT, 10, 0.2, 0.2);
                     }
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.griffes_success")));
                 }, false));
@@ -154,6 +164,7 @@ public final class SkillRegistry {
                 (player, data) -> {
                     boolean now = !data.isTransformed();
                     data.setTransformed(now);
+                    particles(player, player.position().add(0, player.getBbHeight() * 0.5, 0), ParticleTypes.LARGE_SMOKE, 24, 0.4, 0.03);
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
                             now ? "originel.msg.metamorphose_on" : "originel.msg.metamorphose_off")));
                 }, false));
@@ -163,6 +174,8 @@ public final class SkillRegistry {
                     Optional<LivingEntity> target = TargetingUtil.getLookedAtEntity(player, 16);
                     if (target.isPresent()) {
                         target.get().addEffect(new MobEffectInstance(MobEffects.GLOWING, cfg.commandementDurationTicks(), 0));
+                        particles(player, target.get().position().add(0, target.get().getBbHeight() + 0.3, 0),
+                                ParticleTypes.END_ROD, 14, 0.3, 0.04);
                         player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
                                 "originel.msg.commandement_success", target.get().getName().getString())));
                     } else {
@@ -179,8 +192,16 @@ public final class SkillRegistry {
                     applyModifier(player, Attributes.ATTACK_DAMAGE, COLERE_DAMAGE_MODIFIER,
                             cfg.forceBestialeDamageBonus() * (cfg.colereMultiplier() - 1), AttributeModifier.Operation.ADD_VALUE);
                     data.setCooldownExpiry("colere_originel_expiry", expiry);
+                    particles(player, player.position().add(0, player.getBbHeight() * 0.5, 0), ParticleTypes.FLAME, 40, 0.5, 0.08);
+                    particles(player, player.position(), ParticleTypes.CRIT, 24, 0.6, 0.15);
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.colere_success")));
                 }, true));
+    }
+
+    private static void particles(ServerPlayer player, Vec3 pos, ParticleOptions type, int count, double spread, double speed) {
+        if (player.level() instanceof ServerLevel level) {
+            level.sendParticles(type, pos.x, pos.y, pos.z, count, spread, spread, spread, speed);
+        }
     }
 
     private static void applyModifier(ServerPlayer player, Holder<Attribute> attribute, ResourceLocation modifierId, double amount, AttributeModifier.Operation operation) {

@@ -125,6 +125,7 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 10 — Aura d'Abomination, finitions, documentation
 - [x] Etape 11 — Roue de competences (interface radiale), touche dediee, textures amelioree
 - [x] Etape 12 — Nourriture au combat, rituel d'impregnation de sang, peur des mobs, arbre de competences joueur
+- [x] Etape 12 (suite) — Fuite persistante des mobs (AvoidEntityGoal), effets de particules sur les competences et trainee de brume, points de competence suffisants pour tout debloquer au niveau max
 
 ## Limitations connues
 
@@ -152,6 +153,13 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - L'Aura d'Abomination (etape 10) implemente le "malaise" du cahier des
   charges avec l'effet vanilla Nausee (duree/amplificateur configurables) ;
   aucun effet personnalise n'a ete cree pour cela.
+- `skills.toml#general.points_per_level` est passe de 1 a 2 (etape 12,
+  suite) pour qu'un Hybride au niveau maximum puisse debloquer les 13
+  competences. Un `config/originel/skills.toml` deja genere par une
+  installation existante **ne se met pas a jour tout seul** (le systeme de
+  config n'ecrit que les cles manquantes) : editer `points_per_level`
+  manuellement, ou supprimer le fichier pour qu'il regenere avec la
+  nouvelle valeur par defaut.
 
 ## Tests effectues
 
@@ -221,6 +229,15 @@ staff) :
   (positionnement des colonnes/boutons, lisibilite, reactivite au clic)
   n'a **pas** pu etre verifie visuellement. Merci de tester en jeu et de
   signaler tout probleme.
+- **Etape 12 (suite)** : compile et le serveur demarre sans erreur avec le
+  nouveau goal `AvoidEntityGoal` installe sur les mobs vampires/loups-garous
+  a leur apparition (`EntityJoinLevelEvent`) et les nouveaux champs
+  `hybride.toml#visuals.*` generes avec leurs valeurs par defaut. Le
+  comportement de fuite reel des mobs, les particules sur chaque
+  competence, et la trainee de brume n'ont pas pu etre observes dans cet
+  environnement de developpement (pas de client graphique, pas de mob
+  Vampirism/Werewolves reel a faire fuir face a un serveur pilote par
+  commandes console) - merci de confirmer en jeu.
 
 **Limite assumee** : les mecaniques qui necessitent un vrai joueur en jeu
 exposé au soleil, frappé, physiquement proche d'un autre joueur, ou un rendu

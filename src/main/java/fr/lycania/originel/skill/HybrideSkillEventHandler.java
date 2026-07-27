@@ -1,10 +1,16 @@
 package fr.lycania.originel.skill;
 
 import fr.lycania.originel.OriginelMod;
+import fr.lycania.originel.config.HybrideConfig;
 import fr.lycania.originel.config.SkillsConfig;
 import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.faction.HybridePlayer;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -47,6 +53,28 @@ public final class HybrideSkillEventHandler {
             SkillRegistry.clearColereModifiers(player);
             data.setCooldownExpiry(COLERE_EXPIRY_KEY, 0);
         }
+
+        emitMistTrail(player);
+    }
+
+    private static void emitMistTrail(ServerPlayer player) {
+        HybrideConfig cfg = HybrideConfig.get();
+        if (!cfg.trailEnabled() || !(player.level() instanceof ServerLevel level)) {
+            return;
+        }
+        int interval = Math.max(1, cfg.trailIntervalTicks());
+        if (player.tickCount % interval != 0) {
+            return;
+        }
+        double horizontalSpeed = player.getDeltaMovement().horizontalDistance();
+        if (horizontalSpeed < cfg.trailMinSpeed() || player.isFallFlying()) {
+            return;
+        }
+        ResourceLocation particleId = ResourceLocation.tryParse(cfg.trailParticle());
+        if (particleId != null && BuiltInRegistries.PARTICLE_TYPE.get(particleId) instanceof ParticleOptions particle) {
+            level.sendParticles(particle, player.getX(), player.getY() + 0.1, player.getZ(),
+                    2, 0.25, 0.05, 0.25, 0.01);
+        }
     }
 
     @SubscribeEvent
@@ -81,6 +109,11 @@ public final class HybrideSkillEventHandler {
             int foodPoints = Math.round(event.getNewDamage() * (float) SkillsConfig.get().morsureFoodRestore());
             if (foodPoints > 0) {
                 attacker.getFoodData().eat(foodPoints, 1.0f);
+            }
+            if (attacker.level() instanceof ServerLevel level) {
+                var victim = event.getEntity();
+                level.sendParticles(ParticleTypes.DAMAGE_INDICATOR, victim.getX(), victim.getEyeY(), victim.getZ(),
+                        8, 0.3, 0.3, 0.3, 0.3);
             }
         }
     }
