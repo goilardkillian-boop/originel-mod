@@ -46,6 +46,17 @@ Vampirism, Werewolves et Armourer's Workshop sont declares en dependance de deve
 (`runtimeOnly`) : ils sont automatiquement telecharges et charges dans l'environnement de
 run Gradle, sans etre embarques dans le jar final du mod.
 
+## Telecharger le jar
+
+Deux options :
+
+- **Release GitHub** (recommande, pas besoin de compiler) : onglet
+  [Releases](../../releases) du depot, telecharger `originel-<version>.jar`
+  sur la derniere version publiee. Une nouvelle release est generee
+  automatiquement a chaque tag `vX.Y.Z` pousse sur le depot.
+- **Compiler soi-meme** : cloner le depot puis `./gradlew build` ; le jar
+  est genere dans `build/libs/originel-<version>.jar`.
+
 ## Installation (serveur/client de jeu)
 
 1. Installer NeoForge 21.1.x pour Minecraft 1.21.1.
