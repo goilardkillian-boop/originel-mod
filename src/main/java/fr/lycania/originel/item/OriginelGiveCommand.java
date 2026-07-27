@@ -42,6 +42,8 @@ public final class OriginelGiveCommand {
                 .then(simpleGive("sang_gardien", () -> OriginelItems.SANG_GARDIEN.get()))
                 .then(simpleGive("eclat_voile", () -> OriginelItems.ECLAT_VOILE.get()))
                 .then(simpleGive("autel_du_voile", () -> OriginelItems.AUTEL_DU_VOILE.get()))
+                .then(simpleGive("calice", () -> OriginelItems.CALICE.get()))
+                .then(simpleGive("briquet_special", () -> OriginelItems.BRIQUET_SPECIAL.get()))
                 .then(Commands.literal("carnet_corvin")
                         .then(Commands.argument("joueur", EntityArgument.player())
                                 .executes(OriginelGiveCommand::giveCarnet)));

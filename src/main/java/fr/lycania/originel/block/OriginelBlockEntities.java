@@ -15,6 +15,10 @@ public final class OriginelBlockEntities {
             BLOCK_ENTITY_TYPES.register("autel_du_voile", () -> BlockEntityType.Builder.of(
                     AutelDuVoileBlockEntity::new, OriginelBlocks.AUTEL_DU_VOILE.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CaliceBlockEntity>> CALICE =
+            BLOCK_ENTITY_TYPES.register("calice", () -> BlockEntityType.Builder.of(
+                    CaliceBlockEntity::new, OriginelBlocks.CALICE.get()).build(null));
+
     private OriginelBlockEntities() {
     }
 }

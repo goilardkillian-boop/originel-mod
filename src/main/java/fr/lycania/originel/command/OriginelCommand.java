@@ -21,6 +21,7 @@ import fr.lycania.originel.item.OriginelGiveCommand;
 import fr.lycania.originel.redmoon.RedMoonManager;
 import fr.lycania.originel.redmoon.RedMoonState;
 import fr.lycania.originel.ritual.RitualManager;
+import fr.lycania.originel.scellement.ScellementRitualManager;
 import fr.lycania.originel.skill.HybrideSkillCommand;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
@@ -69,7 +70,8 @@ public final class OriginelCommand {
                 .then(Commands.literal("scellement")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.argument("joueur", EntityArgument.player())
-                                .executes(OriginelCommand::executeScellement)))
+                                .executes(OriginelCommand::executeScellement))
+                        .then(Commands.literal("stop").executes(OriginelCommand::executeScellementStop)))
                 .then(Commands.literal("lunerouge")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.literal("start").executes(OriginelCommand::executeLuneRougeStart))
@@ -146,6 +148,12 @@ public final class OriginelCommand {
         target.sendSystemMessage(OriginelText.lore(Component.translatable("originel.msg.scellement_lore")));
         context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
                 "originel.msg.scellement_success", target.getName().getString(), FaiblesseConfig.get().scellementDurationTicks() / 20)), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeScellementStop(CommandContext<CommandSourceStack> context) {
+        ScellementRitualManager.stop(context.getSource().getServer());
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable("originel.msg.scellement_stop")), true);
         return Command.SINGLE_SUCCESS;
     }
 

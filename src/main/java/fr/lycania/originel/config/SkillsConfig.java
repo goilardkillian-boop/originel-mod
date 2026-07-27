@@ -61,6 +61,7 @@ public final class SkillsConfig extends TomlConfigFile {
     private int regenerationImpieAmplifier;
     private int metamorphoseCost;
     private int metamorphoseCooldownTicks;
+    private double metamorphoseStepHeightBonus;
     private int commandementCost;
     private int commandementDurationTicks;
     private int commandementCooldownTicks;
@@ -178,6 +179,9 @@ public final class SkillsConfig extends TomlConfigFile {
         metamorphoseCost = value(config, "originel.metamorphose.cost", 1, "Cout en points de la Metamorphose.");
         metamorphoseCooldownTicks = value(config, "originel.metamorphose.cooldown_ticks", 20,
                 "Delai de recharge (ticks) entre deux Metamorphoses.");
+        metamorphoseStepHeightBonus = value(config, "originel.metamorphose.step_height_bonus", 1.0,
+                "Bonus de hauteur d'enjambee (blocs) masque retire - permet de monter les blocs pleins en marchant, "
+                        + "sans sauter (base vanilla 0.6, donc 1.6 par defaut).");
 
         commandementCost = value(config, "originel.commandement.cost", 1, "Cout en points du Commandement.");
         commandementDurationTicks = value(config, "originel.commandement.duration_ticks", 1200,
@@ -389,6 +393,10 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public int metamorphoseCooldownTicks() {
         return metamorphoseCooldownTicks;
+    }
+
+    public double metamorphoseStepHeightBonus() {
+        return metamorphoseStepHeightBonus;
     }
 
     public int commandementCost() {
