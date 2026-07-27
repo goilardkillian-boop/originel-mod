@@ -26,6 +26,11 @@ public final class LuneRougeConfig extends TomlConfigFile {
     private double moonGreen;
     private double moonBlue;
     private double fogDistanceBlocks;
+    private boolean shaderFallbackEnabled;
+    private double screenTintRed;
+    private double screenTintGreen;
+    private double screenTintBlue;
+    private double screenTintAlpha;
 
     private LuneRougeConfig() {
         super("lunerouge.toml");
@@ -63,18 +68,30 @@ public final class LuneRougeConfig extends TomlConfigFile {
                 "Multiplicateur de vitesse applique aux creatures des factions creatures pendant la Lune Rouge.");
 
         skyTintEnabled = value(config, "sky.tint_enabled", true,
-                "Client uniquement. Si true, le ciel (brouillard) et la lune sont teintes de rouge sang pendant la Lune Rouge.");
-        fogRed = value(config, "sky.fog_red", 0.45, "Composante rouge (0-1) du brouillard pendant la Lune Rouge.");
-        fogGreen = value(config, "sky.fog_green", 0.03, "Composante verte (0-1) du brouillard pendant la Lune Rouge.");
-        fogBlue = value(config, "sky.fog_blue", 0.03, "Composante bleue (0-1) du brouillard pendant la Lune Rouge.");
-        fogStrength = value(config, "sky.fog_strength", 0.85,
+                "Client uniquement. Si true, le ciel (brouillard) et la lune sont teintes de rouge sang pendant la Lune Rouge. "
+                        + "Desactive automatiquement (voir sky.shader_fallback_enabled) si un shaderpack (Iris) est detecte, "
+                        + "puisque les shaders remplacent le rendu du ciel et desalignent la lune redessinee.");
+        fogRed = value(config, "sky.fog_red", 0.38, "Composante rouge (0-1) du brouillard pendant la Lune Rouge.");
+        fogGreen = value(config, "sky.fog_green", 0.05, "Composante verte (0-1) du brouillard pendant la Lune Rouge.");
+        fogBlue = value(config, "sky.fog_blue", 0.05, "Composante bleue (0-1) du brouillard pendant la Lune Rouge.");
+        fogStrength = value(config, "sky.fog_strength", 0.45,
                 "Force du melange (0 = brouillard normal, 1 = entierement remplace par la couleur ci-dessus).");
         moonRed = value(config, "sky.moon_red", 0.75, "Composante rouge (0-1) de la teinte appliquee a la lune.");
         moonGreen = value(config, "sky.moon_green", 0.05, "Composante verte (0-1) de la teinte appliquee a la lune.");
         moonBlue = value(config, "sky.moon_blue", 0.03, "Composante bleue (0-1) de la teinte appliquee a la lune.");
-        fogDistanceBlocks = value(config, "sky.fog_distance_blocks", 40.0,
+        fogDistanceBlocks = value(config, "sky.fog_distance_blocks", 56.0,
                 "Distance (blocs) du mur de brouillard pendant la Lune Rouge (en plus de la teinte). "
                         + "Plus petit = brouillard plus epais/plus proche.");
+        shaderFallbackEnabled = value(config, "sky.shader_fallback_enabled", true,
+                "Si true et qu'un shaderpack Iris est actif, remplace la teinte 3D (ciel/brouillard/lune, qui ne "
+                        + "fonctionne pas correctement avec un shader) par une legere teinte rouge en superposition "
+                        + "2D plein ecran, visible quel que soit le rendu 3D.");
+        screenTintRed = value(config, "sky.screen_tint_red", 0.55, "Composante rouge (0-1) de la teinte plein ecran (mode shader).");
+        screenTintGreen = value(config, "sky.screen_tint_green", 0.0, "Composante verte (0-1) de la teinte plein ecran (mode shader).");
+        screenTintBlue = value(config, "sky.screen_tint_blue", 0.0, "Composante bleue (0-1) de la teinte plein ecran (mode shader).");
+        screenTintAlpha = value(config, "sky.screen_tint_alpha", 0.12,
+                "Opacite (0-1) de la teinte plein ecran (mode shader). Reste discret : c'est une superposition "
+                        + "permanente tant que la Lune Rouge est active.");
     }
 
     public boolean autoEnabled() {
@@ -155,5 +172,25 @@ public final class LuneRougeConfig extends TomlConfigFile {
 
     public double fogDistanceBlocks() {
         return fogDistanceBlocks;
+    }
+
+    public boolean shaderFallbackEnabled() {
+        return shaderFallbackEnabled;
+    }
+
+    public double screenTintRed() {
+        return screenTintRed;
+    }
+
+    public double screenTintGreen() {
+        return screenTintGreen;
+    }
+
+    public double screenTintBlue() {
+        return screenTintBlue;
+    }
+
+    public double screenTintAlpha() {
+        return screenTintAlpha;
     }
 }

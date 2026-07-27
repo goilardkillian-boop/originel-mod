@@ -82,11 +82,26 @@ Pendant la Lune Rouge, le ciel (brouillard) et la lune elle-meme sont teintes
 de rouge sang cote client (`lunerouge.toml#sky`, couleurs et intensite
 configurables, desactivable via `sky.tint_enabled`) - la lune est redessinee
 par-dessus celle de vanilla (pas de mixin), et le mur de brouillard est aussi
-rapproche (`sky.fog_distance_blocks`, 40 blocs par defaut) en plus de la
-teinte, pour un vrai effet de brouillard epais.
+rapproche (`sky.fog_distance_blocks`, 56 blocs par defaut) en plus de la
+teinte. Intensite volontairement adoucie suite a un retour de test
+(`sky.fog_strength` 0.85 -> 0.45, `sky.fog_red` 0.45 -> 0.38) - un serveur ou
+`lunerouge.toml` a deja ete genere garde les anciennes valeurs tant qu'elles
+ne sont pas editees a la main.
 
-Rien de tout ca (particules, sons, brouillard) n'est verifiable visuellement
-dans l'environnement de developpement de ce mod - voir README.
+**Compatibilite shaders (Iris)** : un shaderpack (ex. Complementary Unbound)
+remplace entierement le rendu du ciel par son propre shader, qui ignore la
+teinte de brouillard vanilla et calcule sa propre position pour le soleil/la
+lune - la lune redessinee par le mod se desalignait visiblement de celle du
+shader. Detection automatique d'Iris par reflexion (dependance optionnelle,
+`fr.lycania.originel.client.IrisCompat`) : shaderpack actif -> les 3 effets 3D
+(teinte de brouillard, distance de brouillard, lune redessinee) se
+desactivent tout seuls, remplaces par une legere teinte rouge en superposition
+2D plein ecran (`sky.screen_tint_*`, desactivable via `sky.shader_fallback_
+enabled`) qui fonctionne quel que soit le rendu 3D en dessous.
+
+Rien de tout ca (particules, sons, brouillard, teinte plein ecran) n'est
+verifiable visuellement dans l'environnement de developpement de ce mod -
+voir README.
 
 ## Enjambee (masque retire)
 
@@ -301,6 +316,24 @@ malus tant que l'anneau est porte :
 - une perte de sang periodique accrue (`malus.thirst_drain_percent` toutes
   les `malus.thirst_drain_interval_ticks`), qui accelere la soif ;
 - une reduction des degats d'attaque (`malus.power_weaken_percent`).
+
+## Onglet creatif
+
+Tous les items/blocs du mod (Dague, dague imbibee, composants de rituels,
+Autel du Voile, Calice, Briquet special, Anneau de Cendre...) sont regroupes
+dans un onglet dedie "Lycania : L'Originel" du menu creatif, plutot que
+disperses dans les onglets vanilla ou invisibles.
+
+## Vie bonus et respawn
+
+Les bonus de niveau de l'Hybride (`hybride.toml#progression`, vie/degats/
+vitesse) sont appliques via des modificateurs d'attribut sur
+`PlayerFactionEvent.FactionLevelChanged` - qui ne se redeclenche pas a la
+mort. Comme la mort remplace entierement l'instance `ServerPlayer` (nouvelle
+entite avec les attributs vanilla par defaut), les coeurs bonus disparaissaient
+au respawn sans etre reappliques. Corrige via `PlayerEvent.Clone`, qui
+reapplique les modificateurs et remet la vie au maximum (bonus inclus) des
+que le nouveau joueur existe.
 
 Chaque fois que l'anneau bloque des degats solaires, il perd des charges
 (`charges.loss_per_exposure`). Un message d'avertissement est envoye sous

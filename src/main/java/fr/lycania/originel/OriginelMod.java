@@ -6,6 +6,7 @@ import fr.lycania.originel.block.OriginelBlocks;
 import fr.lycania.originel.config.OriginelConfig;
 import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
+import fr.lycania.originel.item.OriginelCreativeTab;
 import fr.lycania.originel.item.OriginelDataComponents;
 import fr.lycania.originel.item.OriginelItems;
 import net.neoforged.bus.api.IEventBus;
@@ -26,6 +27,7 @@ public class OriginelMod {
         OriginelBlocks.BLOCKS.register(modEventBus);
         OriginelBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
         OriginelItems.ITEMS.register(modEventBus);
+        OriginelCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
         // Vampirism's own faction registry is only populated once its mod
         // constructor has run; RegisterEvent is the first event we're
         // guaranteed to receive after that, so the faction is created there.

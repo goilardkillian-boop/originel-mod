@@ -130,6 +130,7 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 13 — Metamorphose (masque humain protecteur vs forme originelle exposee, vrai tradeoff pour la Faiblesse Cachee/Regeneration impie/Aura d'Abomination), ciel et lune teintes de rouge sang pendant la Lune Rouge, deux nouvelles competences (Odorat du sang, Hurlement de meute)
 - [x] Etape 13 (suite) — Retours de test corriges : sens de la Faiblesse Cachee/Regeneration impie inverse (masque retire = invincible+regen), Aura d'Abomination non spammy (une notification par entree en portee), Odorat du sang/Sens aiguises en particule privee au lieu du Glowing vanilla visible de tous, vision nocturne sans clignotement, enjambee automatique masque retire, deplacement possible roue de competences ouverte, brouillard epais + texture/son pour Hurlement de meute, trainee de brume desactivee par defaut
 - [x] Etape 14 — Enjambee automatique (attribut step_height, remplace le hack d'escalade), Rituel de Scellement en survie (Calice + Briquet special + barre de boss, `/originel scellement stop`), recette de craft pour la Dague de l'Originel (facettes humaine/chasseuse/vampire/loup-garou)
+- [x] Etape 14 (suite) — Brouillard de la Lune Rouge adouci et compatible shaders (Iris detecte par reflexion, teinte plein ecran de secours), bonus de niveau (vie/degats/vitesse) reappliques au respawn, onglet dedie dans le menu creatif
 
 ## Limitations connues
 
