@@ -82,10 +82,21 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 - [x] Etape 4 — Progression par niveaux
 - [x] Etape 5 — Arbre de competences (pilote par commandes, `skills.toml`)
 - [x] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel
-- [ ] Etape 7 — La Lune Rouge
+- [x] Etape 7 — La Lune Rouge
 - [ ] Etape 8 — Le Rituel d'Hybridation
 - [ ] Etape 9 — L'Anneau de Cendre
 - [ ] Etape 10 — Aura d'Abomination, finitions, documentation
+
+## Limitations connues
+
+- L'arbre de competences (etape 5) est pilote par commandes
+  (`/originel skill give|use`) plutot que par l'ecran de competences natif
+  de Vampirism, pour rester simple et testable sans client graphique
+  (voir le message de commit de l'etape 5 pour le detail du choix).
+- L'ambiance visuelle de la Lune Rouge (etape 7) repose sur des particules
+  et un message, pas sur une reelle teinte du ciel/de la lune (qui
+  demanderait des hooks de rendu client difficiles a verifier dans
+  l'environnement de developpement utilise pour ce mod).
 
 ## Licence
 

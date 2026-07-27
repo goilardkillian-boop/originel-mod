@@ -34,6 +34,11 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 
 | `/originel give dague_originel <joueur> [sang_gardien]` | Delivre la Dague de l'Originel (rare, non craftable). L'argument optionnel `sang_gardien` (true/false) determine si la lame porte deja le composant necessaire a la Faiblesse Cachee. |
 | `/originel scellement <joueur>` | Pose le marqueur de scellement sur l'Hybride pour la duree configuree (`faiblesse.toml#scellement_duration_ticks`), une des conditions de la Faiblesse Cachee. |
+| `/originel lunerouge start` | Declenche la Lune Rouge : message immersif a tous les joueurs, force la nuit si necessaire, bonus aux creatures Vampire/Loup-garou presentes, particules d'ambiance. Se termine automatiquement a l'aube (ou avec `stop`). |
+| `/originel lunerouge stop` | Termine la Lune Rouge immediatement (message de fin, retire les bonus aux creatures). |
+
+Une frequence automatique de Lune Rouge (toutes les N nuits) peut aussi etre
+activee sans commande via `lunerouge.toml#auto.enabled`.
 
 _(Liste completee au fur et a mesure de l'implementation des etapes suivantes :
-lune rouge, rituel, composants, anneau de cendre.)_
+rituel, composants, anneau de cendre.)_

@@ -16,6 +16,8 @@ import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.faction.HybridePlayer;
 import fr.lycania.originel.item.OriginelGiveCommand;
+import fr.lycania.originel.redmoon.RedMoonManager;
+import fr.lycania.originel.redmoon.RedMoonState;
 import fr.lycania.originel.skill.HybrideSkillCommand;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
@@ -62,7 +64,11 @@ public final class OriginelCommand {
                 .then(Commands.literal("scellement")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.argument("joueur", EntityArgument.player())
-                                .executes(OriginelCommand::executeScellement)));
+                                .executes(OriginelCommand::executeScellement)))
+                .then(Commands.literal("lunerouge")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.literal("start").executes(OriginelCommand::executeLuneRougeStart))
+                        .then(Commands.literal("stop").executes(OriginelCommand::executeLuneRougeStop)));
     }
 
     static boolean isStaff(CommandSourceStack source) {
@@ -127,6 +133,26 @@ public final class OriginelCommand {
         target.sendSystemMessage(OriginelText.lore("Un sceau se referme sur l'Originel. Sa faiblesse s'eveille."));
         context.getSource().sendSuccess(() -> OriginelText.prefixed(
                 target.getName().getString() + " est scelle pour " + (FaiblesseConfig.get().scellementDurationTicks() / 20) + "s."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeLuneRougeStart(CommandContext<CommandSourceStack> context) {
+        if (RedMoonState.isActive()) {
+            context.getSource().sendFailure(OriginelText.prefixed("La Lune Rouge est deja active."));
+            return 0;
+        }
+        RedMoonManager.start(context.getSource().getServer());
+        context.getSource().sendSuccess(() -> OriginelText.prefixed("La Lune Rouge se leve."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeLuneRougeStop(CommandContext<CommandSourceStack> context) {
+        if (!RedMoonState.isActive()) {
+            context.getSource().sendFailure(OriginelText.prefixed("La Lune Rouge n'est pas active."));
+            return 0;
+        }
+        RedMoonManager.stop(context.getSource().getServer());
+        context.getSource().sendSuccess(() -> OriginelText.prefixed("La Lune Rouge s'eteint."), true);
         return Command.SINGLE_SUCCESS;
     }
 }

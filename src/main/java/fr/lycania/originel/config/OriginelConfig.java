@@ -12,7 +12,8 @@ public final class OriginelConfig {
             GeneralConfig.get(),
             HybrideConfig.get(),
             SkillsConfig.get(),
-            FaiblesseConfig.get()
+            FaiblesseConfig.get(),
+            LuneRougeConfig.get()
     );
 
     private OriginelConfig() {
