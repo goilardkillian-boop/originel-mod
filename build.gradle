@@ -72,12 +72,22 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     // Vampirism (LGPL-3.0) - faction API used by the Originel faction. Not embedded in the jar.
+    // The full jar transitively pulls Vampirism's own optional compat mods (JEI, Guide-API, TerraBlender);
+    // those aren't needed to build/run Originel, and their maven repos aren't declared above, so they're excluded.
     compileOnly "de.teamlapen.vampirism:Vampirism:${vampirism_minecraft_version}-${vampirism_version}:api"
-    runtimeOnly "de.teamlapen.vampirism:Vampirism:${vampirism_minecraft_version}-${vampirism_version}"
+    runtimeOnly("de.teamlapen.vampirism:Vampirism:${vampirism_minecraft_version}-${vampirism_version}") {
+        exclude group: 'mezz.jei'
+        exclude group: 'de.maxanier.guideapi'
+        exclude group: 'com.github.glitchfiend'
+    }
 
     // Werewolves (LGPL-3.0) - used to resolve player-model conflicts with the Originel form. Not embedded.
     compileOnly "de.teamlapen.werewolves:Werewolves:${werewolves_minecraft_version}-${werewolves_version}"
-    runtimeOnly "de.teamlapen.werewolves:Werewolves:${werewolves_minecraft_version}-${werewolves_version}"
+    runtimeOnly("de.teamlapen.werewolves:Werewolves:${werewolves_minecraft_version}-${werewolves_version}") {
+        exclude group: 'mezz.jei'
+        exclude group: 'de.maxanier.guideapi'
+        exclude group: 'com.github.glitchfiend'
+    }
 
     // Armourer's Workshop (CC-BY-NC-SA-3.0) - used by the Anneau de Cendre feature. Not embedded.
     compileOnly "maven.modrinth:armourers-workshop:${armourers_workshop_version}"
