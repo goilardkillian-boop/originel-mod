@@ -28,6 +28,23 @@ defaut 2).
 Une frequence automatique de Lune Rouge (toutes les N nuits) peut aussi etre
 activee sans commande via `lunerouge.toml#auto.enabled`.
 
+## Textes de lore
+
+Chaque item du mod (Dague de l'Originel, Pierre de Clair de Lune, Sang de
+Gardien, Eclat de Voile, Carnet de Corvin, Anneau de Cendre, Autel du Voile)
+affiche une ligne de lore italique sous son nom, tiree du fichier de langue
+(`item.originel.<id>.lore` / `block.originel.<id>.lore`) - un seul handler
+generique (`ItemLoreHandler`) la recherche pour n'importe quel item du mod,
+pas besoin d'en coder une par item. La Dague de l'Originel affiche en plus
+une ligne dediee expliquant le rituel d'impregnation tant qu'elle n'est pas
+imbibee, remplacee par une ligne differente une fois imbibee.
+
+**Important** : tous les textes du mod (noms d'items, lore, competences,
+messages) sont volontairement identiques en francais dans `fr_fr.json` et
+`en_us.json` - meme un client dont Minecraft est configure en anglais (ou
+dans toute autre langue non fournie, qui retombe sur `en_us.json` par
+defaut) verra le mod entierement en francais.
+
 ## Effets visuels
 
 Les competences actives declenchent desormais des particules en jeu (en plus
@@ -119,7 +136,8 @@ quel joueur possedant la dague peut desormais l'imbiber lui-meme en survie :
    main secondaire.
 2. Rester accroupi et faire un clic droit (dans le vide ou sur un bloc).
 3. La dague porte desormais le composant, le Sang de Gardien consomme
-   disparait, un son et des particules confirment le rituel.
+   disparait, un son et des particules confirment le rituel. Sa texture et
+   son nom changent (Dague de l'Originel -> Dague de l'Originel Ecarlate).
 
 Echoue proprement (message explicite) si la dague est deja imbibee ou s'il
 n'y a pas assez de Sang de Gardien en main secondaire.
