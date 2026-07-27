@@ -10,7 +10,8 @@ public final class OriginelConfig {
 
     private static final List<TomlConfigFile> FILES = List.of(
             GeneralConfig.get(),
-            HybrideConfig.get()
+            HybrideConfig.get(),
+            SkillsConfig.get()
     );
 
     private OriginelConfig() {

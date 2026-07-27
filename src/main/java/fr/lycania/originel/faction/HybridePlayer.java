@@ -18,9 +18,15 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -30,9 +36,45 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
     private IActionHandler<IHybridePlayer> actionHandler;
     private int skillPoints;
     private int killProgress;
+    private final Set<String> unlockedSkills = new HashSet<>();
+    private final Map<String, Long> skillCooldowns = new HashMap<>();
+    private boolean transformed;
 
     public HybridePlayer(Player player) {
         super(player);
+    }
+
+    public Set<String> getUnlockedSkills() {
+        return unlockedSkills;
+    }
+
+    public boolean hasSkill(String skillId) {
+        return unlockedSkills.contains(skillId);
+    }
+
+    public boolean unlockSkill(String skillId) {
+        return unlockedSkills.add(skillId);
+    }
+
+    public boolean lockSkill(String skillId) {
+        return unlockedSkills.remove(skillId);
+    }
+
+    /** Game time (in ticks, {@link Level#getGameTime()}) after which the given skill can be used again. */
+    public long getCooldownExpiry(String skillId) {
+        return skillCooldowns.getOrDefault(skillId, 0L);
+    }
+
+    public void setCooldownExpiry(String skillId, long gameTime) {
+        skillCooldowns.put(skillId, gameTime);
+    }
+
+    public boolean isTransformed() {
+        return transformed;
+    }
+
+    public void setTransformed(boolean transformed) {
+        this.transformed = transformed;
     }
 
     public int getSkillPoints() {
@@ -68,6 +110,10 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
         CompoundTag tag = super.serializeNBT(provider);
         tag.putInt("skill_points", skillPoints);
         tag.putInt("kill_progress", killProgress);
+        tag.putBoolean("transformed", transformed);
+        ListTag skillList = new ListTag();
+        unlockedSkills.forEach(id -> skillList.add(StringTag.valueOf(id)));
+        tag.put("unlocked_skills", skillList);
         return tag;
     }
 
@@ -76,6 +122,11 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
         super.deserializeNBT(provider, nbt);
         skillPoints = nbt.getInt("skill_points");
         killProgress = nbt.getInt("kill_progress");
+        transformed = nbt.getBoolean("transformed");
+        unlockedSkills.clear();
+        for (var element : nbt.getList("unlocked_skills", StringTag.TAG_STRING)) {
+            unlockedSkills.add(element.getAsString());
+        }
     }
 
     @Override

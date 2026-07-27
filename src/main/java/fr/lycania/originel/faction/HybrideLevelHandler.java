@@ -5,6 +5,9 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.event.PlayerFactionEvent;
 import fr.lycania.originel.OriginelMod;
 import fr.lycania.originel.config.HybrideConfig;
+import fr.lycania.originel.skill.PassiveSkill;
+import fr.lycania.originel.skill.Skill;
+import fr.lycania.originel.skill.SkillRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +46,20 @@ public final class HybrideLevelHandler {
             }
         } else if (wasHybride) {
             clearLevelStats(player);
+            if (player instanceof ServerPlayer serverPlayer) {
+                clearPassiveSkills(serverPlayer);
+            }
         }
+    }
+
+    private static void clearPassiveSkills(ServerPlayer player) {
+        HybridePlayer data = player.getData(HybrideAttachments.HYBRIDE_PLAYER);
+        for (Skill skill : SkillRegistry.all().values()) {
+            if (skill instanceof PassiveSkill passive && data.hasSkill(skill.id())) {
+                passive.onLock(player, data);
+            }
+        }
+        SkillRegistry.clearColereModifiers(player);
     }
 
     private static void applyLevelStats(Player player, int level) {

@@ -12,6 +12,7 @@ import fr.lycania.originel.config.GeneralConfig;
 import fr.lycania.originel.config.HybrideConfig;
 import fr.lycania.originel.config.OriginelConfig;
 import fr.lycania.originel.faction.HybrideFaction;
+import fr.lycania.originel.skill.HybrideSkillCommand;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -51,11 +52,12 @@ public final class OriginelCommand {
                         .then(Commands.literal("set")
                                 .then(Commands.argument("joueur", EntityArgument.player())
                                         .then(Commands.argument("niveau", IntegerArgumentType.integer(1))
-                                                .executes(OriginelCommand::executeLevelSet)))));
+                                                .executes(OriginelCommand::executeLevelSet)))))
+                .then(HybrideSkillCommand.build());
     }
 
     static boolean isStaff(CommandSourceStack source) {
-        return source.hasPermission(GeneralConfig.get().staffPermissionLevel());
+        return CommandUtil.isStaff(source);
     }
 
     private static int executeReload(CommandContext<CommandSourceStack> context) {
