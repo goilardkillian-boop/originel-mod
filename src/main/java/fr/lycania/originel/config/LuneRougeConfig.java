@@ -25,6 +25,7 @@ public final class LuneRougeConfig extends TomlConfigFile {
     private double moonRed;
     private double moonGreen;
     private double moonBlue;
+    private double fogDistanceBlocks;
 
     private LuneRougeConfig() {
         super("lunerouge.toml");
@@ -71,6 +72,9 @@ public final class LuneRougeConfig extends TomlConfigFile {
         moonRed = value(config, "sky.moon_red", 0.75, "Composante rouge (0-1) de la teinte appliquee a la lune.");
         moonGreen = value(config, "sky.moon_green", 0.05, "Composante verte (0-1) de la teinte appliquee a la lune.");
         moonBlue = value(config, "sky.moon_blue", 0.03, "Composante bleue (0-1) de la teinte appliquee a la lune.");
+        fogDistanceBlocks = value(config, "sky.fog_distance_blocks", 40.0,
+                "Distance (blocs) du mur de brouillard pendant la Lune Rouge (en plus de la teinte). "
+                        + "Plus petit = brouillard plus epais/plus proche.");
     }
 
     public boolean autoEnabled() {
@@ -147,5 +151,9 @@ public final class LuneRougeConfig extends TomlConfigFile {
 
     public double moonBlue() {
         return moonBlue;
+    }
+
+    public double fogDistanceBlocks() {
+        return fogDistanceBlocks;
     }
 }

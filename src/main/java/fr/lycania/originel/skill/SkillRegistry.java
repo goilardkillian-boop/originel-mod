@@ -8,6 +8,7 @@ import fr.lycania.originel.util.TargetingUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -115,7 +116,7 @@ public final class SkillRegistry {
                     for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
                             player.getBoundingBox().inflate(cfg.odoratSangRadius()),
                             e -> e != player && e.isAlive() && e.getHealth() / e.getMaxHealth() <= threshold)) {
-                        nearby.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, true, false));
+                        privateHighlight(player, nearby, ParticleTypes.DAMAGE_INDICATOR);
                     }
                 },
                 null));
@@ -138,11 +139,16 @@ public final class SkillRegistry {
 
         register(new PassiveSkill("sens_aiguises", Branch.LUNE, cfg::sensAiguisesCost,
                 (player, data) -> {
-                    player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, true, false));
+                    // Reapplied every 20 ticks (see HybrideSkillEventHandler); vanilla's
+                    // GameRenderer.getNightVisionScale starts a sine-wave flicker once the
+                    // remaining duration drops under 200 ticks, so anything close to that
+                    // (220 previously) flickers on every refresh. 260 keeps a comfortable
+                    // margin above the threshold at all times.
+                    player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 260, 0, true, false));
                     for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
                             player.getBoundingBox().inflate(cfg.sensAiguisesHighlightRadius()),
                             e -> e != player && e.isAlive())) {
-                        nearby.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, true, false));
+                        privateHighlight(player, nearby, ParticleTypes.END_ROD);
                     }
                 },
                 null));
@@ -167,6 +173,7 @@ public final class SkillRegistry {
         register(new ActiveSkill("hurlement_meute", Branch.LUNE, cfg::hurlementCost, cfg::hurlementCooldownTicks,
                 (player, data) -> {
                     particles(player, player.position().add(0, player.getBbHeight() * 0.5, 0), ParticleTypes.SWEEP_ATTACK, 6, 0.4, 0.05);
+                    playSound(player, cfg.hurlementSound());
                     for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
                             player.getBoundingBox().inflate(cfg.hurlementRadius()), e -> e instanceof Monster && e.isAlive())) {
                         nearby.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, cfg.hurlementFearDurationTicks(), cfg.hurlementFearAmplifier()));
@@ -183,7 +190,7 @@ public final class SkillRegistry {
 
         register(new PassiveSkill("regeneration_impie", Branch.ORIGINEL, cfg::regenerationImpieCost,
                 (player, data) -> {
-                    if (data.isTransformed()) {
+                    if (!data.isTransformed()) {
                         return;
                     }
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, cfg.regenerationImpieAmplifier(), true, false));
@@ -231,6 +238,29 @@ public final class SkillRegistry {
     private static void particles(ServerPlayer player, Vec3 pos, ParticleOptions type, int count, double spread, double speed) {
         if (player.level() instanceof ServerLevel level) {
             level.sendParticles(type, pos.x, pos.y, pos.z, count, spread, spread, spread, speed);
+        }
+    }
+
+    /**
+     * Unlike {@link #particles}, sent only to {@code viewer} (ServerLevel's
+     * per-player overload) - used for hunting-utility highlights (Odorat du
+     * sang, Sens aiguises) so only the Hybride sees who's being tracked,
+     * instead of vanilla's MobEffects.GLOWING which outlines the target for
+     * every nearby player regardless of who applied it.
+     */
+    private static void playSound(ServerPlayer player, String soundId) {
+        ResourceLocation id = ResourceLocation.tryParse(soundId);
+        var sound = id != null ? BuiltInRegistries.SOUND_EVENT.get(id) : null;
+        if (sound != null && player.level() instanceof ServerLevel level) {
+            level.playSound(null, player.blockPosition(), sound, net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 1.0f);
+        }
+    }
+
+    private static void privateHighlight(ServerPlayer viewer, LivingEntity target, ParticleOptions type) {
+        if (viewer.level() instanceof ServerLevel level) {
+            level.sendParticles(viewer, type, true,
+                    target.getX(), target.getY() + target.getBbHeight() + 0.3, target.getZ(),
+                    1, 0.15, 0.1, 0.15, 0.0);
         }
     }
 

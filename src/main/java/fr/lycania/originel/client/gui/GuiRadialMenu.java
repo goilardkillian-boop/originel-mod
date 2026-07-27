@@ -19,11 +19,11 @@ import java.util.function.Consumer;
  * itself, only for the per-slot icons), and a centred name/description for
  * whichever wedge is currently hovered.
  *
- * <p>Known simplification versus Vampirism's version: movement input (WASD)
- * is not passed through while this screen is open, so the player stands
- * still like with any other menu - this couldn't be verified visually in the
- * sandbox this mod was developed in, so the more elaborate movement-passthrough
- * behaviour was left out rather than shipped unverified.
+ * <p>Movement (WASD/jump/sneak/sprint) keeps working while this screen is open -
+ * see fr.lycania.originel.client.WheelMovementPassthrough, which re-drives those
+ * KeyMappings from a raw key poll since vanilla stops updating them the moment
+ * any Screen is open. Mouse-look still doesn't (the cursor is released to aim
+ * at the wheel), only forward motion.
  */
 public abstract class GuiRadialMenu extends Screen {
 

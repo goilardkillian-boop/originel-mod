@@ -55,6 +55,31 @@ public final class HybrideSkillEventHandler {
         }
 
         emitMistTrail(player);
+        handleClimbing(player, data);
+    }
+
+    /**
+     * Masque retire (true form), the Hybride can scale any wall by pressing
+     * into it - like a ladder, but on any solid block. No onClimbable()
+     * override (would need a mixin): horizontalCollision is only true while
+     * the player's attempted movement is actually blocked by a wall in front
+     * of them, so nudging vertical velocity up while it holds reproduces
+     * ladder-like climbing without one, and stops the instant they clear the
+     * top or step back. hurtMarked forces the velocity to sync to the client,
+     * same trick already used for the Griffes leap below.
+     */
+    private static void handleClimbing(ServerPlayer player, HybridePlayer data) {
+        HybrideConfig cfg = HybrideConfig.get();
+        if (!cfg.climbEnabled() || !data.isTransformed()) {
+            return;
+        }
+        if (!player.horizontalCollision || player.isShiftKeyDown() || player.getAbilities().flying) {
+            return;
+        }
+        var motion = player.getDeltaMovement();
+        player.setDeltaMovement(motion.x, Math.max(motion.y, cfg.climbSpeed()), motion.z);
+        player.resetFallDistance();
+        player.hurtMarked = true;
     }
 
     private static void emitMistTrail(ServerPlayer player) {
