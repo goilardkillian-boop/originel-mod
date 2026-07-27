@@ -15,6 +15,11 @@ public final class HybrideConfig extends TomlConfigFile {
     private int factionColor;
     private String assignMessage;
     private String removeMessage;
+    private double bonusHealthPerLevel;
+    private double bonusDamagePerLevel;
+    private double bonusSpeedPerLevel;
+    private boolean xpPerKillEnabled;
+    private int killsPerLevel;
 
     private HybrideConfig() {
         super("hybride.toml");
@@ -39,6 +44,16 @@ public final class HybrideConfig extends TomlConfigFile {
                 "Message envoye au joueur quand la faction Hybride lui est retiree.");
         maxLevel = value(config, "progression.max_level", 14,
                 "Niveau maximum atteignable par l'Hybride.");
+        bonusHealthPerLevel = value(config, "progression.bonus_health_per_level", 2.0,
+                "Points de vie bonus (max) accordes par niveau d'Hybride.");
+        bonusDamagePerLevel = value(config, "progression.bonus_damage_per_level", 0.5,
+                "Degats de mains nues/attaque bonus accordes par niveau d'Hybride.");
+        bonusSpeedPerLevel = value(config, "progression.bonus_speed_per_level", 0.0,
+                "Vitesse de deplacement bonus (fraction de la vitesse de base) accordee par niveau d'Hybride.");
+        xpPerKillEnabled = value(config, "progression.xp_per_kill_enabled", false,
+                "Si true, l'Hybride gagne aussi des niveaux en eliminant des creatures (en plus de /originel level set).");
+        killsPerLevel = value(config, "progression.kills_per_level", 20,
+                "Nombre d'eliminations necessaires pour gagner un niveau, si xp_per_kill_enabled est actif.");
         String colorHex = value(config, "faction.color", "8B0000",
                 "Couleur (hexadecimal RRGGBB, sans #) associee a la faction Hybride dans les commandes/UI de Vampirism.");
         factionColor = parseColor(colorHex);
@@ -89,6 +104,26 @@ public final class HybrideConfig extends TomlConfigFile {
 
     public int factionColor() {
         return factionColor;
+    }
+
+    public double bonusHealthPerLevel() {
+        return bonusHealthPerLevel;
+    }
+
+    public double bonusDamagePerLevel() {
+        return bonusDamagePerLevel;
+    }
+
+    public double bonusSpeedPerLevel() {
+        return bonusSpeedPerLevel;
+    }
+
+    public boolean xpPerKillEnabled() {
+        return xpPerKillEnabled;
+    }
+
+    public int killsPerLevel() {
+        return killsPerLevel;
     }
 
     public boolean isWhitelisted(UUID playerUuid) {

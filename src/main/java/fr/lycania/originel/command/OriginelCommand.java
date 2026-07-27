@@ -2,8 +2,11 @@ package fr.lycania.originel.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import fr.lycania.originel.OriginelMod;
 import fr.lycania.originel.config.GeneralConfig;
 import fr.lycania.originel.config.HybrideConfig;
@@ -42,7 +45,13 @@ public final class OriginelCommand {
                 .then(Commands.literal("remove")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.argument("joueur", EntityArgument.player())
-                                .executes(OriginelCommand::executeRemove)));
+                                .executes(OriginelCommand::executeRemove)))
+                .then(Commands.literal("level")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("joueur", EntityArgument.player())
+                                        .then(Commands.argument("niveau", IntegerArgumentType.integer(1))
+                                                .executes(OriginelCommand::executeLevelSet)))));
     }
 
     static boolean isStaff(CommandSourceStack source) {
@@ -75,6 +84,23 @@ public final class OriginelCommand {
         target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().removeMessage()));
         context.getSource().sendSuccess(() -> OriginelText.prefixed(
                 target.getName().getString() + " n'est plus l'Hybride."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeLevelSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
+        int level = IntegerArgumentType.getInteger(context, "niveau");
+        if (!HybrideFaction.isHybride(target)) {
+            context.getSource().sendFailure(OriginelText.prefixed(
+                    target.getName().getString() + " n'est pas l'Hybride."));
+            return 0;
+        }
+        int max = HybrideFaction.get().getHighestReachableLevel();
+        int clamped = Math.min(Math.max(level, 1), max);
+        IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(target);
+        handler.setFactionLevel(HybrideFaction.get(), clamped);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(
+                target.getName().getString() + " est maintenant niveau " + clamped + "."), true);
         return Command.SINGLE_SUCCESS;
     }
 }

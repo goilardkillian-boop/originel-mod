@@ -28,9 +28,54 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
 
     private ISkillHandler<IHybridePlayer> skillHandler;
     private IActionHandler<IHybridePlayer> actionHandler;
+    private int skillPoints;
+    private int killProgress;
 
     public HybridePlayer(Player player) {
         super(player);
+    }
+
+    public int getSkillPoints() {
+        return skillPoints;
+    }
+
+    public void addSkillPoints(int amount) {
+        skillPoints = Math.max(0, skillPoints + amount);
+    }
+
+    public boolean spendSkillPoint() {
+        if (skillPoints <= 0) {
+            return false;
+        }
+        skillPoints--;
+        return true;
+    }
+
+    public int getKillProgress() {
+        return killProgress;
+    }
+
+    public void incrementKillProgress() {
+        killProgress++;
+    }
+
+    public void resetKillProgress() {
+        killProgress = 0;
+    }
+
+    @Override
+    public @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
+        CompoundTag tag = super.serializeNBT(provider);
+        tag.putInt("skill_points", skillPoints);
+        tag.putInt("kill_progress", killProgress);
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        super.deserializeNBT(provider, nbt);
+        skillPoints = nbt.getInt("skill_points");
+        killProgress = nbt.getInt("kill_progress");
     }
 
     @Override
