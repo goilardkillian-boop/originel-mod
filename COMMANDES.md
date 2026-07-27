@@ -28,6 +28,18 @@ defaut 2).
 Une frequence automatique de Lune Rouge (toutes les N nuits) peut aussi etre
 activee sans commande via `lunerouge.toml#auto.enabled`.
 
+## Effets visuels
+
+Les competences actives declenchent desormais des particules en jeu (en plus
+des messages/effets deja en place) : brume/nuage au depart et a l'arrivee de
+la Brume, poussiere d'ames sur la cible du Regard hypnotique, impact griffu
+sur les Griffes, fumee lors de la Metamorphose, marquage lumineux du
+Commandement, flammes et eclats pour la Colere de l'Originel, et une gerbe
+rouge sur chaque coup vole par la Morsure vampirique. L'Hybride laisse aussi
+une legere trainee de brume derriere lui en se deplacant (`hybride.toml#visuals`,
+desactivable). Rien de tout ca n'est verifiable visuellement dans
+l'environnement de developpement de ce mod - voir README.
+
 ## Arbre de competences
 
 Identifiants des 13 competences (+ 1 ultime) utilisables avec `skill give`/`skill use`,
@@ -135,10 +147,16 @@ qui affecte a portee (`radius`, en blocs) :
   message personnel discret (`message`, visible uniquement par la cible),
   un son entendu uniquement par elle (`sound`), et un malaise (Nausee,
   `malaise_duration_ticks` / `malaise_amplifier`) ;
-- chaque **mob** (non-joueur) des memes factions : une poussee a l'oppose
-  de l'Hybride (`flee_knockback`) et un effet de Vitesse temporaire
-  (`flee_speed_amplifier` / `flee_effect_duration_ticks`) qui le fait fuir
-  tant que l'Hybride reste a portee.
+- chaque **mob** (non-joueur) des memes factions : une vraie fuite
+  persistante (le mob se voit ajouter, une fois pour toutes a son
+  apparition dans le monde, l'`AvoidEntityGoal` vanilla - celui-la meme
+  qu'utilisent d'autres mobs pour fuir un danger - configure pour fuir
+  tout Hybride ayant l'Aura d'Abomination a portee ; vitesse de fuite
+  `flee_walk_speed_modifier` / `flee_sprint_speed_modifier`). Le mob
+  navigue reellement pour s'eloigner (pathfinding), pas une simple
+  poussee ponctuelle, et ca s'applique a **tous** les vampires/loups-garous
+  du monde des qu'ils croisent la route d'un tel Hybride, pas seulement
+  ceux presents lors d'une pulsation.
 
 L'Hybride lui-meme n'est jamais affecte, et rien n'est diffuse publiquement.
 

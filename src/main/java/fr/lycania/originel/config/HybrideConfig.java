@@ -20,6 +20,10 @@ public final class HybrideConfig extends TomlConfigFile {
     private double bonusSpeedPerLevel;
     private boolean xpPerKillEnabled;
     private int killsPerLevel;
+    private boolean trailEnabled;
+    private int trailIntervalTicks;
+    private double trailMinSpeed;
+    private String trailParticle;
 
     private HybrideConfig() {
         super("hybride.toml");
@@ -54,6 +58,14 @@ public final class HybrideConfig extends TomlConfigFile {
                 "Si true, l'Hybride gagne aussi des niveaux en eliminant des creatures (en plus de /originel level set).");
         killsPerLevel = value(config, "progression.kills_per_level", 20,
                 "Nombre d'eliminations necessaires pour gagner un niveau, si xp_per_kill_enabled est actif.");
+        trailEnabled = value(config, "visuals.trail_enabled", true,
+                "Si true, l'Hybride laisse une trainee de brume derriere lui en se deplacant.");
+        trailIntervalTicks = value(config, "visuals.trail_interval_ticks", 4,
+                "Intervalle (ticks) entre deux emissions de particules de la trainee de brume.");
+        trailMinSpeed = value(config, "visuals.trail_min_speed", 0.02,
+                "Vitesse horizontale minimale (blocs/tick) pour que la trainee de brume s'emette.");
+        trailParticle = value(config, "visuals.trail_particle", "minecraft:cloud",
+                "Particule utilisee pour la trainee de brume de l'Hybride en mouvement.");
         String colorHex = value(config, "faction.color", "8B0000",
                 "Couleur (hexadecimal RRGGBB, sans #) associee a la faction Hybride dans les commandes/UI de Vampirism.");
         factionColor = parseColor(colorHex);
@@ -124,6 +136,22 @@ public final class HybrideConfig extends TomlConfigFile {
 
     public int killsPerLevel() {
         return killsPerLevel;
+    }
+
+    public boolean trailEnabled() {
+        return trailEnabled;
+    }
+
+    public int trailIntervalTicks() {
+        return trailIntervalTicks;
+    }
+
+    public double trailMinSpeed() {
+        return trailMinSpeed;
+    }
+
+    public String trailParticle() {
+        return trailParticle;
     }
 
     public boolean isWhitelisted(UUID playerUuid) {
