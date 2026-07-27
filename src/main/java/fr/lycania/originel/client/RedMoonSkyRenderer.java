@@ -91,6 +91,23 @@ public final class RedMoonSkyRenderer {
     }
 
     @SubscribeEvent
+    public static void onRenderFog(ViewportEvent.RenderFog event) {
+        LuneRougeConfig cfg = LuneRougeConfig.get();
+        if (!RedMoonState.isActive() || !cfg.skyTintEnabled()) {
+            return;
+        }
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null || level.effects().skyType() != DimensionSpecialEffects.SkyType.NORMAL) {
+            return;
+        }
+
+        float far = (float) cfg.fogDistanceBlocks();
+        event.setNearPlaneDistance(far * 0.15F);
+        event.setFarPlaneDistance(far);
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
     public static void onFogColor(ViewportEvent.ComputeFogColor event) {
         LuneRougeConfig cfg = LuneRougeConfig.get();
         if (!RedMoonState.isActive() || !cfg.skyTintEnabled()) {

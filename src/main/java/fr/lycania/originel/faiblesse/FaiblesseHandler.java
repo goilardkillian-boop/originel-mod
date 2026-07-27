@@ -24,14 +24,14 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 /**
- * While the Hybride keeps its human mask (Metamorphose off, the default state),
- * it is immune to all damage. The single exception: the attacker wields the
- * Dague de l'Originel, and every enabled condition in faiblesse.toml holds -
- * then damage goes through, multiplied.
+ * Once the Hybride has dropped its human mask (Metamorphose on - its true,
+ * exposed form), it is immune to all damage. The single exception: the
+ * attacker wields the Dague de l'Originel, and every enabled condition in
+ * faiblesse.toml holds - then damage goes through, multiplied.
  * <p>
- * Dropping the mask (Metamorphose on) trades that protection for the Aura
- * d'Abomination and Regeneration impie: unmasked, the Hybride takes damage
- * like anyone else, with no ricochet and no special dagger handling.
+ * Keeping the mask on (the default state) trades that protection - and
+ * Regeneration impie - away: masked, the Hybride passes for human and takes
+ * damage like anyone else, with no ricochet and no special dagger handling.
  */
 @EventBusSubscriber(modid = OriginelMod.MODID)
 public final class FaiblesseHandler {
@@ -48,7 +48,7 @@ public final class FaiblesseHandler {
             return;
         }
         HybridePlayer data = victim.getData(HybrideAttachments.HYBRIDE_PLAYER);
-        if (data.isTransformed()) {
+        if (!data.isTransformed()) {
             return;
         }
 

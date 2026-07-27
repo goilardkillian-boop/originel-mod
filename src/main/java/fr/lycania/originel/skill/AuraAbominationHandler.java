@@ -9,10 +9,8 @@ import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.faction.HybridePlayer;
 import fr.lycania.originel.util.OriginelText;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -27,6 +25,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 /**
  * Etape 10 (+ etape 12) - the Aura d'Abomination skill (originel/SkillRegistry)
  * unlocks as a bare marker; its actual effect lives here. It only fires while
@@ -34,9 +38,12 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  * for the matching tradeoff, since exposure trades the mask's damage immunity
  * for detectability:
  * <ul>
- *   <li>nearby creature-faction <b>players</b> get a discreet per-pulse
- *   signal (message/sound/malaise), following the same tick pattern used
- *   for peau_de_bete/morsure_vampirique in HybrideSkillEventHandler;</li>
+ *   <li>nearby creature-faction <b>players</b> get a discreet signal
+ *   (message/sound/malaise) once when they enter the aura's radius - not
+ *   repeated on a timer, which used to spam their chat and re-nauseate them
+ *   every few seconds for as long as they stood nearby. WARNED tracks who's
+ *   already been notified per Hybride so the same player gets a fresh
+ *   warning only after actually leaving and re-entering range;</li>
  *   <li>every vampire/werewolf <b>mob</b> gets a real, persistent flee
  *   AI goal (vanilla's own AvoidEntityGoal, the same class hostile mobs use
  *   to run from players holding a mace/other fear-inducing effects) that
@@ -47,6 +54,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  */
 @EventBusSubscriber(modid = OriginelMod.MODID)
 public final class AuraAbominationHandler {
+
+    private static final Map<UUID, Set<UUID>> WARNED = new HashMap<>();
 
     private AuraAbominationHandler() {
     }
@@ -92,6 +101,7 @@ public final class AuraAbominationHandler {
         }
         HybridePlayer data = hybride.getData(HybrideAttachments.HYBRIDE_PLAYER);
         if (!data.hasSkill("aura_abomination") || !data.isTransformed()) {
+            WARNED.remove(hybride.getUUID());
             return;
         }
 
@@ -104,14 +114,15 @@ public final class AuraAbominationHandler {
         ResourceLocation soundId = ResourceLocation.tryParse(cfg.auraSound());
         SoundEvent sound = soundId != null ? BuiltInRegistries.SOUND_EVENT.get(soundId) : null;
 
-        if (hybride.level() instanceof ServerLevel level) {
-            level.sendParticles(ParticleTypes.SOUL, hybride.getX(),
-                    hybride.getY() + hybride.getBbHeight() * 0.5, hybride.getZ(), 18, 0.5, 0.6, 0.5, 0.02);
-        }
-
+        Set<UUID> warned = WARNED.computeIfAbsent(hybride.getUUID(), id -> new HashSet<>());
+        Set<UUID> stillNear = new HashSet<>();
         for (ServerPlayer nearby : hybride.level().getEntitiesOfClass(ServerPlayer.class,
                 hybride.getBoundingBox().inflate(cfg.auraRadius()),
                 p -> p != hybride && isCreatureFaction(p))) {
+            stillNear.add(nearby.getUUID());
+            if (!warned.add(nearby.getUUID())) {
+                continue;
+            }
             nearby.sendSystemMessage(OriginelText.lore(cfg.auraMessage()));
             if (sound != null) {
                 nearby.playNotifySound(sound, SoundSource.AMBIENT, 1.0f, 1.0f);
@@ -121,6 +132,7 @@ public final class AuraAbominationHandler {
                         cfg.auraMalaiseDurationTicks(), cfg.auraMalaiseAmplifier()));
             }
         }
+        warned.retainAll(stillNear);
     }
 
     private static boolean isCreatureFaction(LivingEntity entity) {

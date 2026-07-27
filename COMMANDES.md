@@ -47,20 +47,53 @@ defaut) verra le mod entierement en francais.
 
 ## Effets visuels
 
-Les competences actives declenchent desormais des particules en jeu (en plus
-des messages/effets deja en place) : brume/nuage au depart et a l'arrivee de
-la Brume, poussiere d'ames sur la cible du Regard hypnotique, impact griffu
-sur les Griffes, fumee lors de la Metamorphose, marquage lumineux du
-Commandement, flammes et eclats pour la Colere de l'Originel, et une gerbe
-rouge sur chaque coup vole par la Morsure vampirique. L'Hybride laisse aussi
-une legere trainee de brume derriere lui en se deplacant (`hybride.toml#visuals`,
-desactivable). Pendant la Lune Rouge, le ciel (brouillard) et la lune
-elle-meme sont teintes de rouge sang cote client (`lunerouge.toml#sky`,
-couleurs et intensite configurables, desactivable via `sky.tint_enabled`) -
-la lune est redessinee par-dessus celle de vanilla (pas de mixin), et le
-brouillard est melange vers la couleur configuree. Rien de tout ca n'est
-verifiable visuellement dans l'environnement de developpement de ce mod -
-voir README.
+Les competences actives declenchent des particules en jeu (en plus des
+messages/effets deja en place) : brume/nuage au depart et a l'arrivee de la
+Brume, poussiere d'ames sur la cible du Regard hypnotique, impact griffu sur
+les Griffes, fumee lors de la Metamorphose, marquage lumineux du Commandement,
+flammes et eclats pour la Colere de l'Originel, un impact + le cri de meute
+(`werewolves:entity.werewolf.howl` par defaut, configurable dans
+`skills.toml#lune.hurlement_meute.sound`) pour le Hurlement de meute, et une
+gerbe rouge sur chaque coup vole par la Morsure vampirique.
+
+La trainee de brume derriere l'Hybride en mouvement (`hybride.toml#visuals`)
+est **desactivee par defaut** - un serveur ou `hybride.toml` a deja ete genere
+doit passer `trail_enabled` a `false` a la main pour que le changement de
+defaut prenne effet (voir la section config plus bas).
+
+Odorat du sang et Sens aiguises ne mettent plus les cibles en Glowing
+(effet vanilla visible de *tous* les joueurs proches, pas seulement
+l'Hybride) : ils envoient a la place une particule de reperage qui n'est
+visible que par l'Hybride lui-meme (`ServerLevel#sendParticles` cible sur un
+seul joueur). La vision nocturne de Sens aiguises dure aussi plus longtemps
+(260 ticks au lieu de 220) pour eviter le clignotement du fondu-vanilla qui
+se declenche sous 200 ticks restants.
+
+L'Aura d'Abomination (message/son/nausee aux joueurs vampires/loups-garous
+proches) ne se declenche plus qu'**une fois par entree en portee**, plus a
+chaque pulsation - rester a cote d'un Hybride demasque ne spamme plus le chat
+ni la nausee en continu ; il faut quitter puis revenir dans le rayon pour
+recevoir un nouvel avertissement.
+
+Pendant la Lune Rouge, le ciel (brouillard) et la lune elle-meme sont teintes
+de rouge sang cote client (`lunerouge.toml#sky`, couleurs et intensite
+configurables, desactivable via `sky.tint_enabled`) - la lune est redessinee
+par-dessus celle de vanilla (pas de mixin), et le mur de brouillard est aussi
+rapproche (`sky.fog_distance_blocks`, 40 blocs par defaut) en plus de la
+teinte, pour un vrai effet de brouillard epais.
+
+Rien de tout ca (particules, sons, brouillard) n'est verifiable visuellement
+dans l'environnement de developpement de ce mod - voir README.
+
+## Escalade (masque retire)
+
+Masque retire (Metamorphose activee), l'Hybride peut escalader n'importe quel
+mur en s'appuyant dessus (avancer en le regardant), comme une echelle mais sur
+tout bloc solide - pas besoin de construire pour monter. Desactivable via
+`hybride.toml#movement.climb_enabled`, vitesse d'ascension reglable via
+`movement.climb_speed`. Simplification connue : ca fonctionne (le joueur
+monte reellement), mais sans l'animation de grimpe de vanilla (reserverait un
+mixin sur `Entity#onClimbable()`, evite ici).
 
 ## Arbre de competences
 
@@ -73,15 +106,15 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 | Sang | `regard_hypnotique` | Active | Ralentit la cible visee |
 | Sang | `morsure_vampirique` | Passive | Vol de vie et de nourriture/saturation au corps a corps |
 | Sang | `brume` | Active | Court teleport dans la direction du regard |
-| Sang | `odorat_sang` | Passive | Met en surbrillance toute creature en dessous d'un seuil de vie a portee |
+| Sang | `odorat_sang` | Passive | Repere (particule privee, visible de l'Hybride seul) toute creature en dessous d'un seuil de vie a portee |
 | Lune | `force_bestiale` | Passive | Degats d'attaque augmentes en permanence |
-| Lune | `sens_aiguises` | Passive | Vision nocturne + entites proches surlignees |
+| Lune | `sens_aiguises` | Passive | Vision nocturne + entites proches reperees (particule privee) |
 | Lune | `griffes` | Active | Bond griffu, saignement autour de l'impact |
 | Lune | `peau_de_bete` | Passive | Degats subis reduits en permanence |
 | Lune | `hurlement_meute` | Active | Effraie (Faiblesse + Lenteur) les monstres hostiles a portee, buff de vitesse/force pour soi |
 | Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee, et fait fuir les mobs vampires/loups-garous a portee (voir plus bas). Actif uniquement masque retire (Metamorphose) |
-| Originel | `regeneration_impie` | Passive | Regeneration de vie en continu. Actif uniquement masque porte (Metamorphose) |
-| Originel | `metamorphose` | Active | Retire ou remet le masque humain : masque porte = invincible (Faiblesse Cachee) et regen, masque retire = degats reels mais Aura d'Abomination active |
+| Originel | `regeneration_impie` | Passive | Regeneration de vie en continu. Actif uniquement masque retire (Metamorphose) |
+| Originel | `metamorphose` | Active | Retire ou remet le masque humain : masque porte (etat par defaut) = degats reels, indetectable ; masque retire = invincible (Faiblesse Cachee), regenere, escalade les murs, mais Aura d'Abomination active (detectable) |
 | Originel | `commandement` | Active | Marque la cible visee d'une lueur prolongee |
 | Ultime (niveau max) | `colere_originel` | Active | Buff temporaire cumulant les bonus des trois branches |
 
@@ -101,6 +134,9 @@ rien a "activer") avec une touche dediee :
   la roue sans rien declencher.
 - Si aucune competence active n'est debloquee, un message l'indique et la
   roue ne s'ouvre pas.
+- Le deplacement (WASD, saut, sneak, sprint) continue de fonctionner pendant
+  que la roue est ouverte - seule la visee/camera s'arrete (curseur libere
+  pour viser la roue), comme n'importe quel autre menu.
 
 Cette interface est une implementation originale (pas une reutilisation du
 code de Vampirism, qui vit dans un package interne non public) inspiree de
@@ -133,11 +169,12 @@ environnement de developpement.
 
 ## Faiblesse Cachee (invincibilite)
 
-Masque porte (etat par defaut, voir Metamorphose plus haut), l'Hybride est
-immunise a tous les degats (ricochet + son/particule), a une exception
-pres : **toutes** les conditions activees dans `faiblesse.toml` doivent
-etre reunies **en meme temps** au moment du coup pour que les degats
-passent (multiplies par `damage_multiplier`) :
+Masque retire (Metamorphose activee - la vraie forme de l'Originel, exposee
+et detectable via l'Aura d'Abomination), l'Hybride est immunise a tous les
+degats (ricochet + son/particule), a une exception pres : **toutes** les
+conditions activees dans `faiblesse.toml` doivent etre reunies **en meme
+temps** au moment du coup pour que les degats passent (multiplies par
+`damage_multiplier`) :
 
 1. L'attaquant tient la Dague de l'Originel Ecarlate (imbibee, voir
    rituel d'impregnation ci-dessous) en main principale.
@@ -150,9 +187,10 @@ passent (multiplies par `damage_multiplier`) :
    activees dans la config).
 
 Chacune de ces conditions peut etre desactivee individuellement dans
-`faiblesse.toml#conditions`. Masque retire, l'invincibilite (et donc toute
-cette mecanique) ne s'applique plus du tout : les degats passent normalement,
-quelle que soit l'arme (voir Metamorphose).
+`faiblesse.toml#conditions`. Masque porte (etat par defaut), l'invincibilite
+(et donc toute cette mecanique) ne s'applique plus du tout : les degats
+passent normalement, quelle que soit l'arme, mais l'Hybride est indetectable
+(voir Metamorphose).
 
 ## Rituel d'impregnation de sang (Dague de l'Originel)
 

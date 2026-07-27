@@ -45,6 +45,7 @@ public final class SkillsConfig extends TomlConfigFile {
     private int hurlementFearAmplifier;
     private int hurlementSelfBuffDurationTicks;
     private int hurlementSelfBuffAmplifier;
+    private String hurlementSound;
 
     // Originel
     private int auraCost;
@@ -147,12 +148,15 @@ public final class SkillsConfig extends TomlConfigFile {
                 "Duree (ticks) du regain de vitesse et de force que le Hurlement de meute t'accorde.");
         hurlementSelfBuffAmplifier = value(config, "lune.hurlement_meute.self_buff_amplifier", 1,
                 "Amplificateur du regain de vitesse/force (0 = niveau I).");
+        hurlementSound = value(config, "lune.hurlement_meute.sound", "werewolves:entity.werewolf.howl",
+                "Son joue au declenchement du Hurlement de meute.");
 
         auraCost = value(config, "originel.aura_abomination.cost", 1, "Cout en points de l'Aura d'Abomination.");
         auraRadius = value(config, "originel.aura_abomination.radius", 16,
                 "Rayon (blocs) dans lequel l'Aura d'Abomination affecte les joueurs des factions creatures (vampire, loup-garou).");
-        auraIntervalTicks = value(config, "originel.aura_abomination.interval_ticks", 100,
-                "Intervalle (ticks) entre deux pulsations de l'Aura d'Abomination.");
+        auraIntervalTicks = value(config, "originel.aura_abomination.interval_ticks", 20,
+                "Intervalle (ticks) de detection d'entree/sortie de portee. Le message/son/nausee n'est "
+                        + "envoye qu'une fois par joueur cible qui entre dans le rayon (pas repete tant qu'il reste a portee).");
         auraMessage = value(config, "originel.aura_abomination.message",
                 "Un malaise glacial vous parcourt. Quelque chose d'abominable rode pres de vous...",
                 "Message discret envoye aux joueurs des factions creatures a portee de l'Aura d'Abomination.");
@@ -329,6 +333,10 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public int hurlementSelfBuffAmplifier() {
         return hurlementSelfBuffAmplifier;
+    }
+
+    public String hurlementSound() {
+        return hurlementSound;
     }
 
     public int auraCost() {
