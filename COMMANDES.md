@@ -43,7 +43,7 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 | Lune | `sens_aiguises` | Passive |
 | Lune | `griffes` | Active |
 | Lune | `peau_de_bete` | Passive |
-| Originel | `aura_abomination` | Passive (effet implemente a l'etape 10) |
+| Originel | `aura_abomination` | Passive (signal discret aux joueurs des factions creatures a portee, voir plus bas) |
 | Originel | `regeneration_impie` | Passive |
 | Originel | `metamorphose` | Active |
 | Originel | `commandement` | Active |
@@ -62,6 +62,16 @@ Deroule attendu (voir `rituel.toml` pour tous les parametres) :
    doit etre en ligne et pres de l'autel (rayon configurable).
 4. Si un Hybride vivant existe deja, le rituel echoue proprement.
 
+## Aura d'Abomination
+
+Une fois la competence `aura_abomination` debloquee, l'Hybride emet une
+pulsation discrete toutes les `skills.toml#originel.aura_abomination.interval_ticks`,
+qui affecte chaque joueur des factions creatures (Vampirism ou Werewolves) a
+portee (`radius`, en blocs) : un message personnel discret (`message`, visible
+uniquement par la cible), un son entendu uniquement par elle (`sound`), et un
+malaise (Nausee, `malaise_duration_ticks` / `malaise_amplifier`). L'Hybride
+lui-meme n'est jamais affecte, et rien n'est diffuse publiquement.
+
 ## Anneau de Cendre
 
 Un vampire (faction Vampirism) portant (tenant en main principale ou
@@ -78,7 +88,3 @@ Chaque fois que l'anneau bloque des degats solaires, il perd des charges
 un seuil bas configurable (`charges.low_threshold_percent`), et l'anneau
 est detruit (retire de la main) quand ses charges atteignent zero.
 
-## Autres
-
-_(Liste completee au fur et a mesure de l'implementation des etapes suivantes :
-aura d'abomination.)_

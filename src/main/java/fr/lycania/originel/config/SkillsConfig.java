@@ -37,6 +37,12 @@ public final class SkillsConfig extends TomlConfigFile {
 
     // Originel
     private int auraCost;
+    private int auraRadius;
+    private int auraIntervalTicks;
+    private String auraMessage;
+    private String auraSound;
+    private int auraMalaiseDurationTicks;
+    private int auraMalaiseAmplifier;
     private int regenerationImpieCost;
     private int regenerationImpieAmplifier;
     private int metamorphoseCost;
@@ -105,8 +111,20 @@ public final class SkillsConfig extends TomlConfigFile {
         peauDeBeteDamageReductionPercent = value(config, "lune.peau_de_bete.damage_reduction_percent", 0.2,
                 "Fraction des degats subis absorbee tant que la Peau de bete est debloquee.");
 
-        auraCost = value(config, "originel.aura_abomination.cost", 1,
-                "Cout en points de l'Aura d'Abomination (l'effet lui-meme est configure dans lunerouge/general selon l'implementation finale de l'etape 10).");
+        auraCost = value(config, "originel.aura_abomination.cost", 1, "Cout en points de l'Aura d'Abomination.");
+        auraRadius = value(config, "originel.aura_abomination.radius", 16,
+                "Rayon (blocs) dans lequel l'Aura d'Abomination affecte les joueurs des factions creatures (vampire, loup-garou).");
+        auraIntervalTicks = value(config, "originel.aura_abomination.interval_ticks", 100,
+                "Intervalle (ticks) entre deux pulsations de l'Aura d'Abomination.");
+        auraMessage = value(config, "originel.aura_abomination.message",
+                "Un malaise glacial vous parcourt. Quelque chose d'abominable rode pres de vous...",
+                "Message discret envoye aux joueurs des factions creatures a portee de l'Aura d'Abomination.");
+        auraSound = value(config, "originel.aura_abomination.sound", "minecraft:entity.warden.heartbeat",
+                "Son joue (uniquement audible par les cibles) a chaque pulsation de l'Aura d'Abomination.");
+        auraMalaiseDurationTicks = value(config, "originel.aura_abomination.malaise_duration_ticks", 60,
+                "Duree (ticks) du malaise (Nausee) inflige aux cibles de l'Aura d'Abomination.");
+        auraMalaiseAmplifier = value(config, "originel.aura_abomination.malaise_amplifier", 0,
+                "Amplificateur de la Nausee infligee par l'Aura d'Abomination (0 = niveau I).");
 
         regenerationImpieCost = value(config, "originel.regeneration_impie.cost", 1, "Cout en points de la Regeneration impie.");
         regenerationImpieAmplifier = value(config, "originel.regeneration_impie.amplifier", 0,
@@ -230,6 +248,30 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public int auraCost() {
         return auraCost;
+    }
+
+    public int auraRadius() {
+        return auraRadius;
+    }
+
+    public int auraIntervalTicks() {
+        return auraIntervalTicks;
+    }
+
+    public String auraMessage() {
+        return auraMessage;
+    }
+
+    public String auraSound() {
+        return auraSound;
+    }
+
+    public int auraMalaiseDurationTicks() {
+        return auraMalaiseDurationTicks;
+    }
+
+    public int auraMalaiseAmplifier() {
+        return auraMalaiseAmplifier;
     }
 
     public int regenerationImpieCost() {
