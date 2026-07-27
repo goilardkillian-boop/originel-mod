@@ -1,0 +1,12 @@
+{
+  "faction.originel.hybride": "Hybride",
+  "faction.originel.hybride.plural": "Hybrides",
+  "item.originel.dague_originel": "Dague de l'Originel",
+  "item.originel.dague_originel.tooltip": "La seule lame capable de blesser Corvin, l'Hybride.",
+  "item.originel.pierre_clair_de_lune": "Pierre de Clair de Lune",
+  "item.originel.sang_gardien": "Sang de Gardien",
+  "item.originel.eclat_voile": "Eclat de Voile",
+  "item.originel.carnet_corvin": "Carnet de Corvin",
+  "item.originel.anneau_de_cendre": "Anneau de Cendre",
+  "block.originel.autel_du_voile": "Autel du Voile"
+}
