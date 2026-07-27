@@ -20,6 +20,13 @@ public final class OriginelDataComponents {
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
 
+    /** Charges restantes d'un Anneau de Cendre (item quelconque converti via /originel cendre convert). See cendre.toml. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ANNEAU_DE_CENDRE_CHARGES =
+            DATA_COMPONENT_TYPES.register("anneau_de_cendre_charges", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT)
+                    .build());
+
     private OriginelDataComponents() {
     }
 }

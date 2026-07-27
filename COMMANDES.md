@@ -22,6 +22,8 @@ defaut 2).
 | `/originel lunerouge start` | Declenche la Lune Rouge : message immersif a tous les joueurs, force la nuit si necessaire, bonus aux creatures Vampire/Loup-garou presentes, particules d'ambiance. Se termine automatiquement a l'aube (ou avec `stop`). |
 | `/originel lunerouge stop` | Termine la Lune Rouge immediatement (message de fin, retire les bonus aux creatures). |
 | `/originel rituel start` | Lance le Rituel d'Hybridation : cherche un Autel du Voile complet (les 4 composants deposes) pres du joueur whitelist connecte, joue une sequence (particules/son), declenche la Lune Rouge (configurable), puis attribue la faction Hybride. Echoue proprement si aucun joueur whitelist, hors ligne, deja Hybride, ou pas d'autel complet a proximite. |
+| `/originel cendre convert <joueur>` | Convertit l'objet tenu en main principale par le joueur cible en Anneau de Cendre (ajoute le composant de charges, conserve l'objet et son apparence tels quels). Echoue proprement si la main est vide ou si l'objet est deja un Anneau de Cendre. |
+| `/originel cendre give <joueur>` | Delivre un Anneau de Cendre neuf (item `originel:anneau_de_cendre`) directement dans l'inventaire du joueur cible, avec le nombre de charges maximal configure. |
 
 Une frequence automatique de Lune Rouge (toutes les N nuits) peut aussi etre
 activee sans commande via `lunerouge.toml#auto.enabled`.
@@ -60,7 +62,23 @@ Deroule attendu (voir `rituel.toml` pour tous les parametres) :
    doit etre en ligne et pres de l'autel (rayon configurable).
 4. Si un Hybride vivant existe deja, le rituel echoue proprement.
 
+## Anneau de Cendre
+
+Un vampire (faction Vampirism) portant (tenant en main principale ou
+secondaire) un Anneau de Cendre reduit ou annule les degats solaires
+(`cendre.toml#effect.sun_damage_reduction_percent`), au prix de deux
+malus tant que l'anneau est porte :
+
+- une perte de sang periodique accrue (`malus.thirst_drain_percent` toutes
+  les `malus.thirst_drain_interval_ticks`), qui accelere la soif ;
+- une reduction des degats d'attaque (`malus.power_weaken_percent`).
+
+Chaque fois que l'anneau bloque des degats solaires, il perd des charges
+(`charges.loss_per_exposure`). Un message d'avertissement est envoye sous
+un seuil bas configurable (`charges.low_threshold_percent`), et l'anneau
+est detruit (retire de la main) quand ses charges atteignent zero.
+
 ## Autres
 
 _(Liste completee au fur et a mesure de l'implementation des etapes suivantes :
-anneau de cendre.)_
+aura d'abomination.)_

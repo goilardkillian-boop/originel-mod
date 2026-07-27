@@ -84,7 +84,7 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 - [x] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel
 - [x] Etape 7 — La Lune Rouge
 - [x] Etape 8 — Le Rituel d'Hybridation (Autel du Voile a bloc unique)
-- [ ] Etape 9 — L'Anneau de Cendre
+- [x] Etape 9 — L'Anneau de Cendre
 - [ ] Etape 10 — Aura d'Abomination, finitions, documentation
 
 ## Limitations connues
@@ -100,6 +100,14 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
   et un message, pas sur une reelle teinte du ciel/de la lune (qui
   demanderait des hooks de rendu client difficiles a verifier dans
   l'environnement de developpement utilise pour ce mod).
+- L'Anneau de Cendre (etape 9) : les versions d'Armourer's Workshop
+  disponibles pour ce mod n'ont ni item "anneau" ni emplacement
+  d'equipement dedie (verifie dans son code source). "Porter" l'anneau est
+  donc implemente comme "tenir en main principale ou secondaire", et
+  `/originel cendre convert` attache simplement le composant de charges a
+  l'objet deja tenu (y compris un accessoire Armourer's Workshop, dont
+  l'apparence/les donnees sont preservees telles quelles) plutot que
+  d'exiger un item "anneau" specifique d'Armourer's Workshop.
 
 ## Licence
 

@@ -19,7 +19,8 @@
 | `assets/originel/textures/item/sang_gardien.png` | Pixel art original, cree pour ce mod (meme methode) | CC0 / domaine public |
 | `assets/originel/textures/item/eclat_voile.png` | Pixel art original, cree pour ce mod (meme methode) | CC0 / domaine public |
 | `assets/originel/textures/block/autel_du_voile.png` | Pixel art original, cree pour ce mod (meme methode) | CC0 / domaine public |
+| `assets/originel/textures/item/anneau_de_cendre.png` | Pixel art original, cree pour ce mod (meme methode) | CC0 / domaine public |
 | Modele du Carnet de Corvin (`models/item/carnet_corvin.json`) | Reference la texture vanilla `minecraft:item/written_book` (aucun fichier copie, simple reference a un asset du jeu de base) | N/A (vanilla Minecraft) |
 
 D'autres assets seront ajoutes et documentes ici au fur et a mesure des etapes
-suivantes (anneau de cendre...).
+suivantes (aura d'abomination...).

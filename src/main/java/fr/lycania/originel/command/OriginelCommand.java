@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import fr.lycania.originel.OriginelMod;
+import fr.lycania.originel.cendre.CendreCommand;
 import fr.lycania.originel.config.FaiblesseConfig;
 import fr.lycania.originel.config.GeneralConfig;
 import fr.lycania.originel.config.HybrideConfig;
@@ -63,6 +64,7 @@ public final class OriginelCommand {
                                                 .executes(OriginelCommand::executeLevelSet)))))
                 .then(HybrideSkillCommand.build())
                 .then(OriginelGiveCommand.build())
+                .then(CendreCommand.build())
                 .then(Commands.literal("scellement")
                         .requires(OriginelCommand::isStaff)
                         .then(Commands.argument("joueur", EntityArgument.player())
