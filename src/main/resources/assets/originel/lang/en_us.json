@@ -8,5 +8,40 @@
   "item.originel.eclat_voile": "Veil Shard",
   "item.originel.carnet_corvin": "Corvin's Notebook",
   "item.originel.anneau_de_cendre": "Ring of Ash",
-  "block.originel.autel_du_voile": "Altar of the Veil"
+  "block.originel.autel_du_voile": "Altar of the Veil",
+
+  "key.categories.originel": "Lycania: The Originel",
+  "key.originel.skill_wheel": "Open skill wheel",
+  "gui.originel.skill_wheel.title": "Originel's Skills",
+  "gui.originel.skill_wheel.empty": "No active skill unlocked.",
+
+  "skill.originel.velocite": "Velocity",
+  "skill.originel.velocite.desc": "Permanently increases movement speed.",
+  "skill.originel.regard_hypnotique": "Hypnotic Gaze",
+  "skill.originel.regard_hypnotique.desc": "Slows the entity you're looking at.",
+  "skill.originel.morsure_vampirique": "Vampiric Bite",
+  "skill.originel.morsure_vampirique.desc": "Steals life on melee hits.",
+  "skill.originel.brume": "Mist",
+  "skill.originel.brume.desc": "Dissolves the Originel into mist, reforming further away.",
+
+  "skill.originel.force_bestiale": "Bestial Strength",
+  "skill.originel.force_bestiale.desc": "Permanently increases melee damage.",
+  "skill.originel.sens_aiguises": "Sharpened Senses",
+  "skill.originel.sens_aiguises.desc": "Night vision, reveals nearby enemies.",
+  "skill.originel.griffes": "Claws",
+  "skill.originel.griffes.desc": "A clawed leap causing bleeding around the impact.",
+  "skill.originel.peau_de_bete": "Beast Skin",
+  "skill.originel.peau_de_bete.desc": "Permanently reduces damage taken.",
+
+  "skill.originel.aura_abomination": "Aura of Abomination",
+  "skill.originel.aura_abomination.desc": "A cold unease betrays your presence to nearby creatures.",
+  "skill.originel.regeneration_impie": "Unholy Regeneration",
+  "skill.originel.regeneration_impie.desc": "Continuously regenerates health.",
+  "skill.originel.metamorphose": "Metamorphosis",
+  "skill.originel.metamorphose.desc": "Sheds or resumes its human disguise.",
+  "skill.originel.commandement": "Command",
+  "skill.originel.commandement.desc": "Marks a target with a lingering glow.",
+
+  "skill.originel.colere_originel": "Wrath of the Originel",
+  "skill.originel.colere_originel.desc": "Temporarily unleashes the power of all three branches."
 }

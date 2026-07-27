@@ -123,13 +123,15 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 8 — Le Rituel d'Hybridation (Autel du Voile a bloc unique)
 - [x] Etape 9 — L'Anneau de Cendre
 - [x] Etape 10 — Aura d'Abomination, finitions, documentation
+- [x] Etape 11 — Roue de competences (interface radiale), touche dediee, textures amelioree
 
 ## Limitations connues
 
-- L'arbre de competences (etape 5) est pilote par commandes
-  (`/originel skill give|use`) plutot que par l'ecran de competences natif
-  de Vampirism, pour rester simple et testable sans client graphique
-  (voir le message de commit de l'etape 5 pour le detail du choix).
+- L'arbre de competences (etape 5) reste pilote par commandes
+  (`/originel skill give|use`) pour le deblocage (reserve au staff), mais
+  l'activation des competences actives deja debloquees dispose en plus
+  (etape 11) d'une roue de selection radiale ouverte par une touche
+  dediee, dans le meme esprit que le selecteur d'actions de Vampirism.
 - L'Autel du Voile (etape 8) est un bloc unique (avec un block entity a 4
   emplacements, un par composant), pas un vrai multibloc - fallback
   explicitement autorise par le cahier des charges.
@@ -186,14 +188,31 @@ staff) :
 - **Etape 10** : les nouvelles cles `originel.aura_abomination.*` de
   `skills.toml` se generent correctement ; le serveur demarre sans erreur
   avec le handler de l'Aura d'Abomination actif.
+- **Fix post-etape-10** : `/originel remove` ne retirait en realite jamais
+  la faction Hybride (`HybridePlayer.canLeaveFaction()` renvoyait `false`,
+  ce que l'implementation de Vampirism verifie avant tout passage a la
+  faction null/niveau 0 - la commande affichait pourtant un succes). Trouve
+  par un test en jeu, corrige en lisant le code source de
+  `FactionPlayerHandler#setFactionAndLevel` dans Vampirism, revalide via le
+  serveur de dev (`/originel remove` echoue desormais proprement s'il n'y a
+  personne a retirer, au lieu de toujours "reussir").
+- **Etape 11** : compile (client + commun) et le serveur demarre sans
+  erreur avec l'enregistrement reseau (`use_skill`) en place ; le contenu
+  des icones/textures a ete verifie visuellement (rendu du PNG). Le rendu
+  effectif de la roue de competences en jeu (positionnement des secteurs,
+  reactivite au clic, lisibilite) n'a **pas** pu etre verifie visuellement :
+  cet environnement de developpement n'a pas de client Minecraft graphique
+  connectable, seulement un serveur pilotable par commandes console (voir
+  `testserver.sh`). Merci de tester en jeu et de signaler tout probleme de
+  rendu/positionnement des secteurs.
 
 **Limite assumee** : les mecaniques qui necessitent un vrai joueur en jeu
-exposé au soleil, frappé, ou physiquement proche d'un autre joueur (degats
-solaires reellement bloques par l'Anneau de Cendre, pulsation de l'Aura
-d'Abomination percue par un joueur voisin, etc.) reposent sur les memes
-hooks NeoForge/Vampirism (`LivingIncomingDamageEvent`, `PlayerTickEvent`)
-deja eprouves en direct pour la Faiblesse Cachee et les competences, mais
-n'ont pas pu etre rejouees de bout en bout avec un client connecte dans cet
+exposé au soleil, frappé, physiquement proche d'un autre joueur, ou un rendu
+d'interface cliente (degats solaires reellement bloques par l'Anneau de
+Cendre, pulsation de l'Aura d'Abomination percue par un joueur voisin, rendu
+et interaction de la roue de competences, etc.) reposent sur les memes API
+NeoForge/Vampirism deja eprouvees ailleurs dans ce mod, mais n'ont pas pu
+etre rejouees de bout en bout avec un client graphique connecte dans cet
 environnement de developpement.
 
 ## Licence
