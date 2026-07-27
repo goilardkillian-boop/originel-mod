@@ -32,5 +32,8 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 | Originel | `commandement` | Active |
 | Ultime (niveau max) | `colere_originel` | Active |
 
+| `/originel give dague_originel <joueur> [sang_gardien]` | Delivre la Dague de l'Originel (rare, non craftable). L'argument optionnel `sang_gardien` (true/false) determine si la lame porte deja le composant necessaire a la Faiblesse Cachee. |
+| `/originel scellement <joueur>` | Pose le marqueur de scellement sur l'Hybride pour la duree configuree (`faiblesse.toml#scellement_duration_ticks`), une des conditions de la Faiblesse Cachee. |
+
 _(Liste completee au fur et a mesure de l'implementation des etapes suivantes :
-scellement, lune rouge, rituel, composants, anneau de cendre.)_
+lune rouge, rituel, composants, anneau de cendre.)_

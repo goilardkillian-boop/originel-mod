@@ -8,10 +8,14 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import fr.lycania.originel.OriginelMod;
+import fr.lycania.originel.config.FaiblesseConfig;
 import fr.lycania.originel.config.GeneralConfig;
 import fr.lycania.originel.config.HybrideConfig;
 import fr.lycania.originel.config.OriginelConfig;
+import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
+import fr.lycania.originel.faction.HybridePlayer;
+import fr.lycania.originel.item.OriginelGiveCommand;
 import fr.lycania.originel.skill.HybrideSkillCommand;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
@@ -53,7 +57,12 @@ public final class OriginelCommand {
                                 .then(Commands.argument("joueur", EntityArgument.player())
                                         .then(Commands.argument("niveau", IntegerArgumentType.integer(1))
                                                 .executes(OriginelCommand::executeLevelSet)))))
-                .then(HybrideSkillCommand.build());
+                .then(HybrideSkillCommand.build())
+                .then(OriginelGiveCommand.build())
+                .then(Commands.literal("scellement")
+                        .requires(OriginelCommand::isStaff)
+                        .then(Commands.argument("joueur", EntityArgument.player())
+                                .executes(OriginelCommand::executeScellement)));
     }
 
     static boolean isStaff(CommandSourceStack source) {
@@ -103,6 +112,21 @@ public final class OriginelCommand {
         handler.setFactionLevel(HybrideFaction.get(), clamped);
         context.getSource().sendSuccess(() -> OriginelText.prefixed(
                 target.getName().getString() + " est maintenant niveau " + clamped + "."), true);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int executeScellement(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
+        if (!HybrideFaction.isHybride(target)) {
+            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " n'est pas l'Hybride."));
+            return 0;
+        }
+        HybridePlayer data = target.getData(HybrideAttachments.HYBRIDE_PLAYER);
+        long expiry = target.level().getGameTime() + FaiblesseConfig.get().scellementDurationTicks();
+        data.setScellementExpiry(expiry);
+        target.sendSystemMessage(OriginelText.lore("Un sceau se referme sur l'Originel. Sa faiblesse s'eveille."));
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(
+                target.getName().getString() + " est scelle pour " + (FaiblesseConfig.get().scellementDurationTicks() / 20) + "s."), true);
         return Command.SINGLE_SUCCESS;
     }
 }

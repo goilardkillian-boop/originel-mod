@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import fr.lycania.originel.config.OriginelConfig;
 import fr.lycania.originel.faction.HybrideAttachments;
 import fr.lycania.originel.faction.HybrideFaction;
+import fr.lycania.originel.item.OriginelDataComponents;
+import fr.lycania.originel.item.OriginelItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -18,6 +20,8 @@ public class OriginelMod {
     public OriginelMod(IEventBus modEventBus, ModContainer modContainer) {
         OriginelConfig.loadAll();
         HybrideAttachments.register(modEventBus);
+        OriginelDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
+        OriginelItems.ITEMS.register(modEventBus);
         // Vampirism's own faction registry is only populated once its mod
         // constructor has run; RegisterEvent is the first event we're
         // guaranteed to receive after that, so the faction is created there.

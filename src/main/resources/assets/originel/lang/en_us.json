@@ -1,4 +1,6 @@
 {
   "faction.originel.hybride": "Hybrid",
-  "faction.originel.hybride.plural": "Hybrids"
+  "faction.originel.hybride.plural": "Hybrids",
+  "item.originel.dague_originel": "Dagger of the Originel",
+  "item.originel.dague_originel.tooltip": "The only blade capable of wounding Corvin, the Hybrid."
 }

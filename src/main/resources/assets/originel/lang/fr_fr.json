@@ -1,4 +1,6 @@
 {
   "faction.originel.hybride": "Hybride",
-  "faction.originel.hybride.plural": "Hybrides"
+  "faction.originel.hybride.plural": "Hybrides",
+  "item.originel.dague_originel": "Dague de l'Originel",
+  "item.originel.dague_originel.tooltip": "La seule lame capable de blesser Corvin, l'Hybride."
 }

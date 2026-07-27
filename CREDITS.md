@@ -12,6 +12,9 @@
 
 ## Assets (textures, modeles, sons) du mod Originel
 
-Aucun asset custom n'a encore ete ajoute (Etape 1 : squelette de code uniquement).
-Chaque asset ajoute dans les etapes suivantes sera documente ici avec sa source et sa
-licence (CC0 / domaine public, ou creation originale pour ce mod).
+| Fichier | Source | Licence |
+|---|---|---|
+| `assets/originel/textures/item/dague_originel.png` | Pixel art original, cree pour ce mod (script Python generant un PNG 16x16, aucun asset tiers utilise) | CC0 / domaine public |
+
+D'autres assets seront ajoutes et documentes ici au fur et a mesure des etapes
+suivantes (composants du rituel, anneau de cendre...).

@@ -81,7 +81,7 @@ _(Voir `COMMANDES.md`, a completer au fur et a mesure de l'implementation.)_
 - [x] Etape 3 — Faction Hybride (l'Originel)
 - [x] Etape 4 — Progression par niveaux
 - [x] Etape 5 — Arbre de competences (pilote par commandes, `skills.toml`)
-- [ ] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel
+- [x] Etape 6 — Invincibilite, Faiblesse Cachee, Dague de l'Originel
 - [ ] Etape 7 — La Lune Rouge
 - [ ] Etape 8 — Le Rituel d'Hybridation
 - [ ] Etape 9 — L'Anneau de Cendre

@@ -39,9 +39,23 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
     private final Set<String> unlockedSkills = new HashSet<>();
     private final Map<String, Long> skillCooldowns = new HashMap<>();
     private boolean transformed;
+    private long scellementExpiry;
 
     public HybridePlayer(Player player) {
         super(player);
+    }
+
+    /** Game time after which the scellement marker (see faiblesse.toml) is no longer active. */
+    public long getScellementExpiry() {
+        return scellementExpiry;
+    }
+
+    public void setScellementExpiry(long gameTime) {
+        this.scellementExpiry = gameTime;
+    }
+
+    public boolean isScellee(long currentGameTime) {
+        return scellementExpiry > currentGameTime;
     }
 
     public Set<String> getUnlockedSkills() {
@@ -111,6 +125,7 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
         tag.putInt("skill_points", skillPoints);
         tag.putInt("kill_progress", killProgress);
         tag.putBoolean("transformed", transformed);
+        tag.putLong("scellement_expiry", scellementExpiry);
         ListTag skillList = new ListTag();
         unlockedSkills.forEach(id -> skillList.add(StringTag.valueOf(id)));
         tag.put("unlocked_skills", skillList);
@@ -123,6 +138,7 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
         skillPoints = nbt.getInt("skill_points");
         killProgress = nbt.getInt("kill_progress");
         transformed = nbt.getBoolean("transformed");
+        scellementExpiry = nbt.getLong("scellement_expiry");
         unlockedSkills.clear();
         for (var element : nbt.getList("unlocked_skills", StringTag.TAG_STRING)) {
             unlockedSkills.add(element.getAsString());
