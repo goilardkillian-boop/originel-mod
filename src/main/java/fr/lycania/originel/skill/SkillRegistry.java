@@ -157,7 +157,12 @@ public final class SkillRegistry {
         });
 
         register(new PassiveSkill("regeneration_impie", Branch.ORIGINEL, cfg::regenerationImpieCost,
-                (player, data) -> player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, cfg.regenerationImpieAmplifier(), true, false)),
+                (player, data) -> {
+                    if (data.isTransformed()) {
+                        return;
+                    }
+                    player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, cfg.regenerationImpieAmplifier(), true, false));
+                },
                 null));
 
         register(new ActiveSkill("metamorphose", Branch.ORIGINEL, cfg::metamorphoseCost, cfg::metamorphoseCooldownTicks,

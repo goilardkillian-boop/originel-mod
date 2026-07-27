@@ -29,7 +29,10 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * Etape 10 (+ etape 12) - the Aura d'Abomination skill (originel/SkillRegistry)
- * unlocks as a bare marker; its actual effect lives here:
+ * unlocks as a bare marker; its actual effect lives here. It only fires while
+ * the Hybride has dropped its human mask (Metamorphose on) - see FaiblesseHandler
+ * for the matching tradeoff, since exposure trades the mask's damage immunity
+ * for detectability:
  * <ul>
  *   <li>nearby creature-faction <b>players</b> get a discreet per-pulse
  *   signal (message/sound/malaise), following the same tick pattern used
@@ -75,7 +78,8 @@ public final class AuraAbominationHandler {
         if (!(entity instanceof ServerPlayer player) || !HybrideFaction.isHybride(player)) {
             return false;
         }
-        return player.getData(HybrideAttachments.HYBRIDE_PLAYER).hasSkill("aura_abomination");
+        HybridePlayer data = player.getData(HybrideAttachments.HYBRIDE_PLAYER);
+        return data.hasSkill("aura_abomination") && data.isTransformed();
     }
 
     @SubscribeEvent
@@ -87,7 +91,7 @@ public final class AuraAbominationHandler {
             return;
         }
         HybridePlayer data = hybride.getData(HybrideAttachments.HYBRIDE_PLAYER);
-        if (!data.hasSkill("aura_abomination")) {
+        if (!data.hasSkill("aura_abomination") || !data.isTransformed()) {
             return;
         }
 

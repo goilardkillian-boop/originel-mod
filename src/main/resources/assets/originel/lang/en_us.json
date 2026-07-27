@@ -43,11 +43,11 @@
   "skill.originel.peau_de_bete.desc": "Reduit les degats subis en permanence.",
 
   "skill.originel.aura_abomination": "Aura d'Abomination",
-  "skill.originel.aura_abomination.desc": "Un malaise glacial trahit sa presence aux creatures proches.",
+  "skill.originel.aura_abomination.desc": "Un malaise glacial trahit sa presence aux creatures proches. Actif uniquement masque retire.",
   "skill.originel.regeneration_impie": "Regeneration impie",
-  "skill.originel.regeneration_impie.desc": "Regenere la vie en continu.",
+  "skill.originel.regeneration_impie.desc": "Regenere la vie en continu. Actif uniquement masque porte.",
   "skill.originel.metamorphose": "Metamorphose",
-  "skill.originel.metamorphose.desc": "Abandonne ou reprend son masque humain.",
+  "skill.originel.metamorphose.desc": "Masque porte : invincible et discret. Masque retire : expose aux coups et detectable, mais l'Aura d'Abomination s'active.",
   "skill.originel.commandement": "Commandement",
   "skill.originel.commandement.desc": "Marque une cible d'une lueur prolongee.",
 
