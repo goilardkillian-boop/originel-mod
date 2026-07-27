@@ -14,7 +14,7 @@ public final class OriginelItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(OriginelMod.MODID);
 
     public static final DeferredHolder<Item, Item> DAGUE_ORIGINEL = ITEMS.registerItem("dague_originel",
-            props -> new Item(props.stacksTo(1).rarity(Rarity.EPIC).fireResistant()));
+            props -> new DagueOriginelItem(props.stacksTo(1).rarity(Rarity.EPIC).fireResistant()));
 
     // Composants du Rituel d'Hybridation (etape 8) - non craftables, delivres par /originel give.
     public static final DeferredHolder<Item, Item> PIERRE_CLAIR_DE_LUNE = ITEMS.registerItem("pierre_clair_de_lune",

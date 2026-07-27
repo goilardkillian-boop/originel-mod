@@ -126,6 +126,7 @@ d'Hybridation, de l'Aura d'Abomination et de l'Anneau de Cendre.
 - [x] Etape 11 — Roue de competences (interface radiale), touche dediee, textures amelioree
 - [x] Etape 12 — Nourriture au combat, rituel d'impregnation de sang, peur des mobs, arbre de competences joueur
 - [x] Etape 12 (suite) — Fuite persistante des mobs (AvoidEntityGoal), effets de particules sur les competences et trainee de brume, points de competence suffisants pour tout debloquer au niveau max
+- [x] Etape 12 (suite) — Texture et nom distincts pour la Dague de l'Originel une fois imbibee, lore sur chaque item, mod entierement en francais quelle que soit la langue du client
 
 ## Limitations connues
 
@@ -238,6 +239,12 @@ staff) :
   environnement de developpement (pas de client graphique, pas de mob
   Vampirism/Werewolves reel a faire fuir face a un serveur pilote par
   commandes console) - merci de confirmer en jeu.
+- **Etape 12 (suite, textures/lore)** : `./gradlew build` reussit ;
+  `dague_originel.json` et le nouveau `dague_originel_sang.json` sont du
+  JSON valide (verifie), le rendu reel en jeu (texture qui change
+  effectivement au bon moment, position/lisibilite du lore dans l'infobulle)
+  n'a pas pu etre verifie visuellement - voir l'aperçu envoye en conversation
+  pour la texture seule (zoom statique, pas un rendu en jeu).
 
 **Limite assumee** : les mecaniques qui necessitent un vrai joueur en jeu
 exposé au soleil, frappé, physiquement proche d'un autre joueur, ou un rendu

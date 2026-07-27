@@ -2,5 +2,8 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "originel:item/dague_originel"
-  }
+  },
+  "overrides": [
+    { "predicate": { "custom_model_data": 1 }, "model": "originel:item/dague_originel_sang" }
+  ]
 }

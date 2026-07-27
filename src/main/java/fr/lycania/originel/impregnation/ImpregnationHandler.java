@@ -5,6 +5,7 @@ import fr.lycania.originel.config.ImpregnationConfig;
 import fr.lycania.originel.item.OriginelDataComponents;
 import fr.lycania.originel.item.OriginelItems;
 import fr.lycania.originel.util.OriginelText;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -58,6 +60,7 @@ public final class ImpregnationHandler {
 
         offHand.shrink(cost);
         mainHand.set(OriginelDataComponents.SANG_GARDIEN.get(), true);
+        mainHand.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
         player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.impregnation_success")));
         playRitualEffect(player);
     }

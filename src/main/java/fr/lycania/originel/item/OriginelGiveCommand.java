@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.WrittenBookContent;
 
 import java.util.List;
@@ -65,6 +66,7 @@ public final class OriginelGiveCommand {
         ItemStack stack = new ItemStack(OriginelItems.DAGUE_ORIGINEL.get());
         if (withSangGardien) {
             stack.set(OriginelDataComponents.SANG_GARDIEN.get(), true);
+            stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
         }
         target.getInventory().placeItemBackInInventory(stack);
         context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
