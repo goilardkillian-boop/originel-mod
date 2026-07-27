@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": { "item": "werewolves:silver_ingot" },
+    "F": { "item": "minecraft:flint" }
+  },
+  "pattern": [
+    "S S",
+    " F "
+  ],
+  "result": {
+    "count": 1,
+    "id": "originel:calice"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": { "item": "werewolves:liver" },
+    "V": { "item": "vampirism:vampire_blood_bottle" },
+    "S": { "item": "originel:sang_gardien" },
+    "W": { "item": "werewolves:silver_block" }
+  },
+  "pattern": [
+    " L ",
+    "VSW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "originel:dague_originel"
+  }
+}

@@ -12,13 +12,16 @@ defaut 2).
 | `/originel level set <joueur> <n>` | Fixe le niveau d'Hybride du joueur (borne a `hybride.toml#progression.max_level`). Chaque niveau applique les bonus de stats configures et accorde des points de competence. |
 | `/originel skill give <joueur> <competence>` | Debloque une competence pour le joueur (doit etre l'Hybride), en depensant un point de competence. Echoue si la competence est deja debloquee, si le niveau requis n'est pas atteint (Colere de l'Originel : niveau max) ou si le joueur n'a pas assez de points. Equivalent staff de l'arbre de competences (voir plus bas), que l'Hybride peut desormais utiliser lui-meme. |
 | `/originel skill use <joueur> <competence>` | Declenche une competence active deja debloquee (Regard hypnotique, Brume, Griffes, Metamorphose, Commandement, Colere de l'Originel). Respecte le delai de recharge configure. |
-| `/originel give dague_originel <joueur> [sang_gardien]` | Delivre la Dague de l'Originel (rare, non craftable). L'argument optionnel `sang_gardien` (true/false) determine si la lame porte deja le composant necessaire a la Faiblesse Cachee. |
+| `/originel give dague_originel <joueur> [sang_gardien]` | Delivre la Dague de l'Originel (aussi obtenable par craft, voir plus bas). L'argument optionnel `sang_gardien` (true/false) determine si la lame porte deja le composant necessaire a la Faiblesse Cachee. |
 | `/originel give pierre_clair_de_lune <joueur>` | Delivre la Pierre de Clair de Lune, composant du Rituel d'Hybridation. |
 | `/originel give sang_gardien <joueur>` | Delivre le composant d'objet Sang de Gardien (a ne pas confondre avec le composant de donnees du meme nom sur la Dague, voir etape 6). |
 | `/originel give eclat_voile <joueur>` | Delivre l'Eclat de Voile, composant du Rituel d'Hybridation. |
 | `/originel give carnet_corvin <joueur>` | Delivre le Carnet de Corvin, livre lore lisible (titre/auteur/pages configures dans `rituel.toml#carnet`). |
 | `/originel give autel_du_voile <joueur>` | Delivre le bloc Autel du Voile a placer. |
+| `/originel give calice <joueur>` | Delivre le bloc Calice a placer (aussi obtenable par craft, voir Rituel de Scellement plus bas). |
+| `/originel give briquet_special <joueur>` | Delivre le Briquet special qui allume le Calice (aussi obtenable par craft). |
 | `/originel scellement <joueur>` | Pose le marqueur de scellement sur l'Hybride pour la duree configuree (`faiblesse.toml#scellement_duration_ticks`), une des conditions de la Faiblesse Cachee. |
+| `/originel scellement stop` | Leve immediatement le scellement en cours et retire la barre de boss, quelle que soit son origine (commande ou Rituel de Scellement). Surtout utile en test. |
 | `/originel lunerouge start` | Declenche la Lune Rouge : message immersif a tous les joueurs, force la nuit si necessaire, bonus aux creatures Vampire/Loup-garou presentes, particules d'ambiance. Se termine automatiquement a l'aube (ou avec `stop`). |
 | `/originel lunerouge stop` | Termine la Lune Rouge immediatement (message de fin, retire les bonus aux creatures). |
 | `/originel rituel start` | Lance le Rituel d'Hybridation : cherche un Autel du Voile complet (les 4 composants deposes) pres du joueur whitelist connecte, joue une sequence (particules/son), declenche la Lune Rouge (configurable), puis attribue la faction Hybride. Echoue proprement si aucun joueur whitelist, hors ligne, deja Hybride, ou pas d'autel complet a proximite. |
@@ -85,15 +88,16 @@ teinte, pour un vrai effet de brouillard epais.
 Rien de tout ca (particules, sons, brouillard) n'est verifiable visuellement
 dans l'environnement de developpement de ce mod - voir README.
 
-## Escalade (masque retire)
+## Enjambee (masque retire)
 
-Masque retire (Metamorphose activee), l'Hybride peut escalader n'importe quel
-mur en s'appuyant dessus (avancer en le regardant), comme une echelle mais sur
-tout bloc solide - pas besoin de construire pour monter. Desactivable via
-`hybride.toml#movement.climb_enabled`, vitesse d'ascension reglable via
-`movement.climb_speed`. Simplification connue : ca fonctionne (le joueur
-monte reellement), mais sans l'animation de grimpe de vanilla (reserverait un
-mixin sur `Entity#onClimbable()`, evite ici).
+Masque retire (Metamorphose activee), l'Hybride monte automatiquement sur les
+blocs pleins en marchant dedans, sans avoir a sauter ni a construire - un
+bonus sur l'attribut vanilla `minecraft:generic.step_height` (base 0.6,
+`skills.toml#originel.metamorphose.step_height_bonus` = +1.0 par defaut, donc
+1.6). C'est le meme attribut que vanilla utilise deja pour regler la hauteur
+de marche normale des entites, pas un hack de mouvement personnalise : appele
+une fois a l'activation/desactivation de Metamorphose (comme les modificateurs
+de Force bestiale/Velocite), pas recalcule en boucle.
 
 ## Arbre de competences
 
@@ -179,7 +183,8 @@ temps** au moment du coup pour que les degats passent (multiplies par
 1. L'attaquant tient la Dague de l'Originel Ecarlate (imbibee, voir
    rituel d'impregnation ci-dessous) en main principale.
 2. L'Hybride porte le marqueur de scellement, pose par le staff via
-   `/originel scellement <joueur>` et qui expire au bout de
+   `/originel scellement <joueur>` **ou** par n'importe quel joueur via le
+   Rituel de Scellement en survie (voir plus bas), et qui expire au bout de
    `faiblesse.toml#scellement_duration_ticks` (5 minutes par defaut) -
    **cette etape est facile a oublier** : sans elle, une dague imbibee
    frappee en pleine lune ne fait toujours rien.
@@ -191,6 +196,32 @@ Chacune de ces conditions peut etre desactivee individuellement dans
 (et donc toute cette mecanique) ne s'applique plus du tout : les degats
 passent normalement, quelle que soit l'arme, mais l'Hybride est indetectable
 (voir Metamorphose).
+
+## Rituel de Scellement (Calice)
+
+Alternative en survie a `/originel scellement <joueur>` - n'importe quel
+joueur peut sceller l'Hybride actuel sans intervention du staff :
+
+1. Deposer un par un (clic droit sur le Calice, un objet en main) les trois
+   composants : un croc de vampire (`vampirism:vampire_fang`), un croc de
+   loup-garou (`werewolves:werewolf_tooth`), et un Sang de Gardien - le sang
+   de Marcus, qu'il gardait cache en sachant qu'il aurait un role a jouer.
+2. Une fois le Calice complet, l'allumer avec le Briquet special (clic droit
+   dessus) : sa flamme bleue consomme les trois composants et pose le
+   scellement (meme duree que la commande staff) sur quiconque est
+   actuellement l'Hybride. Echoue proprement (message) si personne n'est
+   Hybride a l'instant.
+3. Une **barre de boss bleue** ("Scellement de l'Originel") apparait pour
+   tous les joueurs connectes et decompte les 5 minutes ; elle disparait
+   toute seule a expiration, ou immediatement avec `/originel scellement
+   stop` (staff, surtout pour les tests).
+
+Le Calice se craft avec 2 lingots d'argent (`werewolves:silver_ingot`) et un
+silex, comme un bol vanilla (`S . S` / `. F .`). Le Briquet special se craft
+en combinant un briquet vanilla avec du sol des ames (`minecraft:soul_soil`).
+Textures et recettes non verifiees visuellement dans l'environnement de
+developpement de ce mod, mais le serveur de dev demarre sans erreur avec les
+deux recettes et les items modded referencees (Vampirism/Werewolves).
 
 ## Rituel d'impregnation de sang (Dague de l'Originel)
 
@@ -209,6 +240,20 @@ quel joueur possedant la dague peut desormais l'imbiber lui-meme en survie :
 
 Echoue proprement (message explicite) si la dague est deja imbibee ou s'il
 n'y a pas assez de Sang de Gardien en main secondaire.
+
+La Dague de l'Originel elle-meme (auparavant uniquement `/originel give`) se
+craft desormais aussi, une par facette de l'Hybride - humaine, chasseuse,
+vampire, loup-garou :
+
+```
+. L .
+V S W
+```
+
+`L` = `werewolves:liver`, `V` = `vampirism:vampire_blood_bottle`,
+`S` = `originel:sang_gardien`, `W` = `werewolves:silver_block`. Le resultat
+n'est pas imbibee (comme `/originel give dague_originel <joueur>` sans
+l'argument optionnel) - passer par le rituel d'impregnation ci-dessus ensuite.
 
 ## Rituel d'Hybridation
 

@@ -24,8 +24,6 @@ public final class HybrideConfig extends TomlConfigFile {
     private int trailIntervalTicks;
     private double trailMinSpeed;
     private String trailParticle;
-    private boolean climbEnabled;
-    private double climbSpeed;
 
     private HybrideConfig() {
         super("hybride.toml");
@@ -68,11 +66,6 @@ public final class HybrideConfig extends TomlConfigFile {
                 "Vitesse horizontale minimale (blocs/tick) pour que la trainee de brume s'emette.");
         trailParticle = value(config, "visuals.trail_particle", "minecraft:cloud",
                 "Particule utilisee pour la trainee de brume de l'Hybride en mouvement.");
-        climbEnabled = value(config, "movement.climb_enabled", true,
-                "Si true, masque retire (Metamorphose), l'Hybride peut escalader n'importe quel mur en s'appuyant "
-                        + "dessus (comme une echelle), sans avoir a construire pour monter.");
-        climbSpeed = value(config, "movement.climb_speed", 0.16,
-                "Vitesse d'ascension (blocs/tick) en escaladant un mur.");
         String colorHex = value(config, "faction.color", "8B0000",
                 "Couleur (hexadecimal RRGGBB, sans #) associee a la faction Hybride dans les commandes/UI de Vampirism.");
         factionColor = parseColor(colorHex);
@@ -161,13 +154,6 @@ public final class HybrideConfig extends TomlConfigFile {
         return trailParticle;
     }
 
-    public boolean climbEnabled() {
-        return climbEnabled;
-    }
-
-    public double climbSpeed() {
-        return climbSpeed;
-    }
 
     public boolean isWhitelisted(UUID playerUuid) {
         return whitelistedUuid != null && whitelistedUuid.equals(playerUuid);

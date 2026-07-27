@@ -37,6 +37,7 @@ public final class SkillRegistry {
 
     private static final ResourceLocation VELOCITE_MODIFIER = id("skill_velocite");
     private static final ResourceLocation FORCE_BESTIALE_MODIFIER = id("skill_force_bestiale");
+    private static final ResourceLocation STEP_HEIGHT_MODIFIER = id("metamorphose_step_height");
     private static final ResourceLocation COLERE_SPEED_MODIFIER = id("skill_colere_speed");
     private static final ResourceLocation COLERE_DAMAGE_MODIFIER = id("skill_colere_damage");
 
@@ -201,6 +202,15 @@ public final class SkillRegistry {
                 (player, data) -> {
                     boolean now = !data.isTransformed();
                     data.setTransformed(now);
+                    AttributeInstance stepHeight = player.getAttribute(Attributes.STEP_HEIGHT);
+                    if (stepHeight != null) {
+                        if (now) {
+                            stepHeight.addOrReplacePermanentModifier(new AttributeModifier(STEP_HEIGHT_MODIFIER,
+                                    cfg.metamorphoseStepHeightBonus(), AttributeModifier.Operation.ADD_VALUE));
+                        } else {
+                            stepHeight.removeModifier(STEP_HEIGHT_MODIFIER);
+                        }
+                    }
                     particles(player, player.position().add(0, player.getBbHeight() * 0.5, 0), ParticleTypes.LARGE_SMOKE, 24, 0.4, 0.03);
                     player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
                             now ? "originel.msg.metamorphose_on" : "originel.msg.metamorphose_off")));

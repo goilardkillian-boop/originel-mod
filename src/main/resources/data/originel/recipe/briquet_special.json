@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    { "item": "minecraft:flint_and_steel" },
+    { "item": "minecraft:soul_soil" }
+  ],
+  "result": {
+    "count": 1,
+    "id": "originel:briquet_special"
+  }
+}

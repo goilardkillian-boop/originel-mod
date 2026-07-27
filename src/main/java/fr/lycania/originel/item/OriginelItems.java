@@ -32,6 +32,13 @@ public final class OriginelItems {
     public static final DeferredItem<BlockItem> AUTEL_DU_VOILE = ITEMS.registerSimpleBlockItem(
             "autel_du_voile", OriginelBlocks.AUTEL_DU_VOILE, new Item.Properties().rarity(Rarity.UNCOMMON));
 
+    // Rituel de Scellement (etape 14) - alternative survie a /originel scellement.
+    public static final DeferredItem<BlockItem> CALICE = ITEMS.registerSimpleBlockItem(
+            "calice", OriginelBlocks.CALICE, new Item.Properties().rarity(Rarity.UNCOMMON));
+
+    public static final DeferredHolder<Item, Item> BRIQUET_SPECIAL = ITEMS.registerItem("briquet_special",
+            props -> new Item(props.stacksTo(1).rarity(Rarity.UNCOMMON)));
+
     // Anneau de Cendre (etape 9) - egalement obtenu en convertissant, via
     // /originel cendre convert, un item quelconque deja en main (voir CendreCommand).
     public static final DeferredHolder<Item, Item> ANNEAU_DE_CENDRE = ITEMS.registerItem("anneau_de_cendre",

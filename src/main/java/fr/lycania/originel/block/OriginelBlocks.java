@@ -18,6 +18,13 @@ public final class OriginelBlocks {
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
+    public static final DeferredBlock<CaliceBlock> CALICE = BLOCKS.register("calice",
+            () -> new CaliceBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.METAL)
+                    .strength(5.0f, 30.0f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()));
+
     private OriginelBlocks() {
     }
 }
