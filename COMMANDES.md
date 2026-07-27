@@ -33,21 +33,45 @@ activee sans commande via `lunerouge.toml#auto.enabled`.
 Identifiants des 13 competences (+ 1 ultime) utilisables avec `skill give`/`skill use`,
 tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 
-| Branche | Competence (id) | Type |
-|---|---|---|
-| Sang | `velocite` | Passive |
-| Sang | `regard_hypnotique` | Active |
-| Sang | `morsure_vampirique` | Passive (vol de vie au corps a corps) |
-| Sang | `brume` | Active |
-| Lune | `force_bestiale` | Passive |
-| Lune | `sens_aiguises` | Passive |
-| Lune | `griffes` | Active |
-| Lune | `peau_de_bete` | Passive |
-| Originel | `aura_abomination` | Passive (signal discret aux joueurs des factions creatures a portee, voir plus bas) |
-| Originel | `regeneration_impie` | Passive |
-| Originel | `metamorphose` | Active |
-| Originel | `commandement` | Active |
-| Ultime (niveau max) | `colere_originel` | Active |
+| Branche | Competence (id) | Type | Effet |
+|---|---|---|---|
+| Sang | `velocite` | Passive | Vitesse de deplacement augmentee en permanence |
+| Sang | `regard_hypnotique` | Active | Ralentit la cible visee |
+| Sang | `morsure_vampirique` | Passive | Vol de vie au corps a corps |
+| Sang | `brume` | Active | Court teleport dans la direction du regard |
+| Lune | `force_bestiale` | Passive | Degats d'attaque augmentes en permanence |
+| Lune | `sens_aiguises` | Passive | Vision nocturne + entites proches surlignees |
+| Lune | `griffes` | Active | Bond griffu, saignement autour de l'impact |
+| Lune | `peau_de_bete` | Passive | Degats subis reduits en permanence |
+| Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee (voir plus bas) |
+| Originel | `regeneration_impie` | Passive | Regeneration de vie en continu |
+| Originel | `metamorphose` | Active | Bascule un etat "transforme" (interne) |
+| Originel | `commandement` | Active | Marque la cible visee d'une lueur prolongee |
+| Ultime (niveau max) | `colere_originel` | Active | Buff temporaire cumulant les bonus des trois branches |
+
+## Roue de competences (interface)
+
+En plus des commandes ci-dessus, tout joueur (typiquement l'Hybride en jeu,
+pas le staff) peut ouvrir une **roue de selection radiale** listant ses
+competences **actives deja debloquees** (les passives n'y apparaissent pas,
+rien a "activer") avec une touche dediee :
+
+- Touche par defaut : **K** (configurable dans Options > Commandes > "Lycania : L'Originel").
+- Survoler un secteur affiche son nom et une courte description ; s'il est
+  en recharge, le temps restant s'affiche et le secteur est teinte en rouge.
+- Clic gauche sur un secteur disponible declenche la competence (envoie une
+  demande au serveur, qui revalide tout exactement comme `/originel skill
+  use` - le client ne fait que proposer). Clic droit ou toucher `Echap` ferme
+  la roue sans rien declencher.
+- Si aucune competence active n'est debloquee, un message l'indique et la
+  roue ne s'ouvre pas.
+
+Cette interface est une implementation originale (pas une reutilisation du
+code de Vampirism, qui vit dans un package interne non public) inspiree de
+son selecteur d'actions radial - voir `CREDITS.md`. Son rendu visuel en jeu
+n'a pas pu etre verifie dans l'environnement de developpement de ce mod
+(pas de client graphique connectable) : merci de signaler tout probleme
+d'affichage ou de reactivite au clic.
 
 ## Rituel d'Hybridation
 

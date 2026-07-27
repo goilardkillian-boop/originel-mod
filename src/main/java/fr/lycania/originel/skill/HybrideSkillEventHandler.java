@@ -36,6 +36,10 @@ public final class HybrideSkillEventHandler {
                     passive.tick(player, data);
                 }
             }
+            // Attachments don't auto-sync on in-place mutation (unlockSkill/setCooldownExpiry/
+            // addSkillPoints all mutate the object returned by getData rather than calling
+            // setData) - the client-side skill wheel needs this pushed periodically instead.
+            player.syncData(HybrideAttachments.HYBRIDE_PLAYER);
         }
 
         long expiry = data.getCooldownExpiry(COLERE_EXPIRY_KEY);

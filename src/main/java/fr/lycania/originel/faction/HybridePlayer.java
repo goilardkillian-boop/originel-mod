@@ -8,12 +8,15 @@ import de.teamlapen.vampirism.entity.player.FactionBasePlayer;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.attachment.AttachmentSyncHandler;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -152,7 +155,13 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
 
     @Override
     public boolean canLeaveFaction() {
-        return false;
+        // Vampirism's FactionPlayerHandler#setFactionAndLevel checks this before
+        // allowing ANY leave/level-0 transition, including a staff-forced
+        // /originel remove - returning false here silently blocks that command
+        // (Vampirism logs a warning but the mod never sees an error), so this
+        // must stay true even though lore-wise the Hybride "shouldn't" be able
+        // to just walk away from the curse on their own.
+        return true;
     }
 
     @Override
@@ -229,6 +238,51 @@ public class HybridePlayer extends FactionBasePlayer<IHybridePlayer> implements 
     @Override
     public void onUpdatePlayer(PlayerTickEvent event) {
     }
+
+    /**
+     * Syncs just what the client-side skill wheel (see fr.lycania.originel.client)
+     * needs to know about its own player: which skills are unlocked, their
+     * cooldowns, and remaining points. Owner-only (see sendToPlayer) since no
+     * other client has any use for one player's Hybride skill state.
+     */
+    public static final AttachmentSyncHandler<HybridePlayer> SYNC_HANDLER = new AttachmentSyncHandler<>() {
+        @Override
+        public boolean sendToPlayer(IAttachmentHolder holder, ServerPlayer to) {
+            return holder instanceof Player owner && owner.getUUID().equals(to.getUUID());
+        }
+
+        @Override
+        public void write(RegistryFriendlyByteBuf buf, HybridePlayer attachment, boolean initialSync) {
+            buf.writeVarInt(attachment.unlockedSkills.size());
+            for (String id : attachment.unlockedSkills) {
+                buf.writeUtf(id);
+            }
+            buf.writeVarInt(attachment.skillCooldowns.size());
+            for (Map.Entry<String, Long> entry : attachment.skillCooldowns.entrySet()) {
+                buf.writeUtf(entry.getKey());
+                buf.writeLong(entry.getValue());
+            }
+            buf.writeVarInt(attachment.skillPoints);
+        }
+
+        @Override
+        public HybridePlayer read(IAttachmentHolder holder, RegistryFriendlyByteBuf buf, @Nullable HybridePlayer previousValue) {
+            HybridePlayer value = previousValue != null ? previousValue : new HybridePlayer((Player) holder);
+            value.unlockedSkills.clear();
+            int skillCount = buf.readVarInt();
+            for (int i = 0; i < skillCount; i++) {
+                value.unlockedSkills.add(buf.readUtf());
+            }
+            value.skillCooldowns.clear();
+            int cooldownCount = buf.readVarInt();
+            for (int i = 0; i < cooldownCount; i++) {
+                String id = buf.readUtf();
+                value.skillCooldowns.put(id, buf.readLong());
+            }
+            value.skillPoints = buf.readVarInt();
+            return value;
+        }
+    };
 
     public static class Factory implements Function<IAttachmentHolder, HybridePlayer> {
         @Override

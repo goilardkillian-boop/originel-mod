@@ -8,5 +8,40 @@
   "item.originel.eclat_voile": "Eclat de Voile",
   "item.originel.carnet_corvin": "Carnet de Corvin",
   "item.originel.anneau_de_cendre": "Anneau de Cendre",
-  "block.originel.autel_du_voile": "Autel du Voile"
+  "block.originel.autel_du_voile": "Autel du Voile",
+
+  "key.categories.originel": "Lycania : L'Originel",
+  "key.originel.skill_wheel": "Ouvrir la roue de competences",
+  "gui.originel.skill_wheel.title": "Competences de l'Originel",
+  "gui.originel.skill_wheel.empty": "Aucune competence active debloquee.",
+
+  "skill.originel.velocite": "Velocite",
+  "skill.originel.velocite.desc": "Augmente la vitesse de deplacement en permanence.",
+  "skill.originel.regard_hypnotique": "Regard hypnotique",
+  "skill.originel.regard_hypnotique.desc": "Ralentit la cible visee.",
+  "skill.originel.morsure_vampirique": "Morsure vampirique",
+  "skill.originel.morsure_vampirique.desc": "Vole de la vie au corps a corps.",
+  "skill.originel.brume": "Brume",
+  "skill.originel.brume.desc": "Dissout l'Originel en brume, le reformant plus loin.",
+
+  "skill.originel.force_bestiale": "Force bestiale",
+  "skill.originel.force_bestiale.desc": "Augmente les degats d'attaque en permanence.",
+  "skill.originel.sens_aiguises": "Sens aiguises",
+  "skill.originel.sens_aiguises.desc": "Vision nocturne, revele les ennemis proches.",
+  "skill.originel.griffes": "Griffes",
+  "skill.originel.griffes.desc": "Bond griffu infligeant un saignement autour de l'impact.",
+  "skill.originel.peau_de_bete": "Peau de bete",
+  "skill.originel.peau_de_bete.desc": "Reduit les degats subis en permanence.",
+
+  "skill.originel.aura_abomination": "Aura d'Abomination",
+  "skill.originel.aura_abomination.desc": "Un malaise glacial trahit sa presence aux creatures proches.",
+  "skill.originel.regeneration_impie": "Regeneration impie",
+  "skill.originel.regeneration_impie.desc": "Regenere la vie en continu.",
+  "skill.originel.metamorphose": "Metamorphose",
+  "skill.originel.metamorphose.desc": "Abandonne ou reprend son masque humain.",
+  "skill.originel.commandement": "Commandement",
+  "skill.originel.commandement.desc": "Marque une cible d'une lueur prolongee.",
+
+  "skill.originel.colere_originel": "Colere de l'Originel",
+  "skill.originel.colere_originel.desc": "Dechaine temporairement la puissance des trois branches."
 }

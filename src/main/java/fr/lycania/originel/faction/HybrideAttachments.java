@@ -24,6 +24,7 @@ public final class HybrideAttachments {
             ATTACHMENT_TYPES.register(Keys.HYBRIDE_PLAYER.getPath(), () -> AttachmentType.builder(new HybridePlayer.Factory())
                     .serialize(new HybridePlayer.Serializer())
                     .copyOnDeath()
+                    .sync(HybridePlayer.SYNC_HANDLER)
                     .build());
 
     private HybrideAttachments() {

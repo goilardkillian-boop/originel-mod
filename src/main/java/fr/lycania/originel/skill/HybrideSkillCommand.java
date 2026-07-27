@@ -78,6 +78,7 @@ public final class HybrideSkillCommand {
         data.addSkillPoints(-skill.cost());
         data.unlockSkill(skillId);
         skill.onUnlock(target, data);
+        target.syncData(HybrideAttachments.HYBRIDE_PLAYER);
         target.sendSystemMessage(OriginelText.prefixed("Competence debloquee : " + skillId + "."));
         context.getSource().sendSuccess(() -> OriginelText.prefixed(
                 target.getName().getString() + " a debloque " + skillId + " (points restants : " + data.getSkillPoints() + ")."), true);
@@ -87,31 +88,11 @@ public final class HybrideSkillCommand {
     private static int executeUse(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         String skillId = StringArgumentType.getString(context, "competence");
-
-        if (!HybrideFaction.isHybride(target)) {
-            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " n'est pas l'Hybride."));
+        SkillActivation.Outcome outcome = SkillActivation.tryActivate(target, skillId);
+        if (!outcome.success()) {
+            context.getSource().sendFailure(OriginelText.prefixed(outcome.message()));
             return 0;
         }
-        var skillOpt = SkillRegistry.byId(skillId);
-        if (skillOpt.isEmpty() || !(skillOpt.get() instanceof ActiveSkill activeSkill)) {
-            context.getSource().sendFailure(OriginelText.prefixed(skillId + " n'est pas une competence activable."));
-            return 0;
-        }
-        HybridePlayer data = target.getData(HybrideAttachments.HYBRIDE_PLAYER);
-        if (!data.hasSkill(skillId)) {
-            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " n'a pas debloque " + skillId + "."));
-            return 0;
-        }
-        long now = target.level().getGameTime();
-        long readyAt = data.getCooldownExpiry(skillId);
-        if (now < readyAt) {
-            long remainingTicks = readyAt - now;
-            context.getSource().sendFailure(OriginelText.prefixed(
-                    skillId + " est en recharge encore " + (remainingTicks / 20) + "s."));
-            return 0;
-        }
-        activeSkill.activate(target, data);
-        data.setCooldownExpiry(skillId, now + activeSkill.cooldownTicks());
         return Command.SINGLE_SUCCESS;
     }
 }

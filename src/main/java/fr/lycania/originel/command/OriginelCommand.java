@@ -104,7 +104,11 @@ public final class OriginelCommand {
 
     private static int executeRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
-        HybrideFaction.remove(target);
+        if (!HybrideFaction.remove(target)) {
+            context.getSource().sendFailure(OriginelText.prefixed(
+                    target.getName().getString() + " n'est pas l'Hybride."));
+            return 0;
+        }
         target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().removeMessage()));
         context.getSource().sendSuccess(() -> OriginelText.prefixed(
                 target.getName().getString() + " n'est plus l'Hybride."), true);
