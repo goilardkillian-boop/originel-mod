@@ -19,5 +19,6 @@ public final class OriginelModClient {
     public OriginelModClient(IEventBus modEventBus) {
         modEventBus.addListener(OriginelKeys::register);
         NeoForge.EVENT_BUS.register(OriginelKeys.class);
+        NeoForge.EVENT_BUS.register(RedMoonSkyRenderer.class);
     }
 }

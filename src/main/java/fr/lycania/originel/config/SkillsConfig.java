@@ -23,6 +23,9 @@ public final class SkillsConfig extends TomlConfigFile {
     private int brumeCost;
     private double brumeDistance;
     private int brumeCooldownTicks;
+    private int odoratSangCost;
+    private int odoratSangRadius;
+    private double odoratSangHealthThreshold;
 
     // Lune
     private int forceBestialeCost;
@@ -35,6 +38,13 @@ public final class SkillsConfig extends TomlConfigFile {
     private int griffesCooldownTicks;
     private int peauDeBeteCost;
     private double peauDeBeteDamageReductionPercent;
+    private int hurlementCost;
+    private int hurlementCooldownTicks;
+    private int hurlementRadius;
+    private int hurlementFearDurationTicks;
+    private int hurlementFearAmplifier;
+    private int hurlementSelfBuffDurationTicks;
+    private int hurlementSelfBuffAmplifier;
 
     // Originel
     private int auraCost;
@@ -73,7 +83,7 @@ public final class SkillsConfig extends TomlConfigFile {
         pointsPerLevel = value(config, "general.points_per_level", 2,
                 "Nombre de points de competence accordes par niveau d'Hybride gagne. "
                         + "Avec 2 par niveau et 14 niveaux (hybride.toml#progression.max_level), "
-                        + "un Hybride au niveau maximum peut debloquer les 13 competences (cout total 15).");
+                        + "un Hybride au niveau maximum peut debloquer les 15 competences (cout total 17).");
 
         velociteCost = value(config, "sang.velocite.cost", 1, "Cout en points de la competence Velocite.");
         veloviteSpeedBonus = value(config, "sang.velocite.speed_bonus", 0.15,
@@ -100,6 +110,12 @@ public final class SkillsConfig extends TomlConfigFile {
         brumeDistance = value(config, "sang.brume.distance", 8.0, "Distance (blocs) parcourue par la Brume.");
         brumeCooldownTicks = value(config, "sang.brume.cooldown_ticks", 160, "Delai de recharge (ticks) de la Brume.");
 
+        odoratSangCost = value(config, "sang.odorat_sang.cost", 1, "Cout en points de l'Odorat du sang.");
+        odoratSangRadius = value(config, "sang.odorat_sang.radius", 20,
+                "Rayon (blocs) dans lequel l'Odorat du sang detecte les entites blessees.");
+        odoratSangHealthThreshold = value(config, "sang.odorat_sang.health_threshold_percent", 0.3,
+                "Fraction de vie maximale en dessous de laquelle une entite est mise en surbrillance par l'Odorat du sang.");
+
         forceBestialeCost = value(config, "lune.force_bestiale.cost", 1, "Cout en points de la Force bestiale.");
         forceBestialeDamageBonus = value(config, "lune.force_bestiale.damage_bonus", 2.0,
                 "Bonus de degats en melee tant que Force bestiale est debloquee.");
@@ -117,6 +133,20 @@ public final class SkillsConfig extends TomlConfigFile {
         peauDeBeteCost = value(config, "lune.peau_de_bete.cost", 1, "Cout en points de la Peau de bete.");
         peauDeBeteDamageReductionPercent = value(config, "lune.peau_de_bete.damage_reduction_percent", 0.2,
                 "Fraction des degats subis absorbee tant que la Peau de bete est debloquee.");
+
+        hurlementCost = value(config, "lune.hurlement_meute.cost", 1, "Cout en points du Hurlement de meute.");
+        hurlementCooldownTicks = value(config, "lune.hurlement_meute.cooldown_ticks", 400,
+                "Delai de recharge (ticks) du Hurlement de meute.");
+        hurlementRadius = value(config, "lune.hurlement_meute.radius", 10,
+                "Rayon (blocs) dans lequel le Hurlement de meute effraie les monstres hostiles.");
+        hurlementFearDurationTicks = value(config, "lune.hurlement_meute.fear_duration_ticks", 140,
+                "Duree (ticks) de la Faiblesse et de la Lenteur infligees aux monstres effrayes.");
+        hurlementFearAmplifier = value(config, "lune.hurlement_meute.fear_amplifier", 1,
+                "Amplificateur de la Faiblesse/Lenteur infligee (0 = niveau I).");
+        hurlementSelfBuffDurationTicks = value(config, "lune.hurlement_meute.self_buff_duration_ticks", 140,
+                "Duree (ticks) du regain de vitesse et de force que le Hurlement de meute t'accorde.");
+        hurlementSelfBuffAmplifier = value(config, "lune.hurlement_meute.self_buff_amplifier", 1,
+                "Amplificateur du regain de vitesse/force (0 = niveau I).");
 
         auraCost = value(config, "originel.aura_abomination.cost", 1, "Cout en points de l'Aura d'Abomination.");
         auraRadius = value(config, "originel.aura_abomination.radius", 16,
@@ -221,6 +251,18 @@ public final class SkillsConfig extends TomlConfigFile {
         return brumeCooldownTicks;
     }
 
+    public int odoratSangCost() {
+        return odoratSangCost;
+    }
+
+    public int odoratSangRadius() {
+        return odoratSangRadius;
+    }
+
+    public double odoratSangHealthThreshold() {
+        return odoratSangHealthThreshold;
+    }
+
     public int forceBestialeCost() {
         return forceBestialeCost;
     }
@@ -259,6 +301,34 @@ public final class SkillsConfig extends TomlConfigFile {
 
     public double peauDeBeteDamageReductionPercent() {
         return peauDeBeteDamageReductionPercent;
+    }
+
+    public int hurlementCost() {
+        return hurlementCost;
+    }
+
+    public int hurlementCooldownTicks() {
+        return hurlementCooldownTicks;
+    }
+
+    public int hurlementRadius() {
+        return hurlementRadius;
+    }
+
+    public int hurlementFearDurationTicks() {
+        return hurlementFearDurationTicks;
+    }
+
+    public int hurlementFearAmplifier() {
+        return hurlementFearAmplifier;
+    }
+
+    public int hurlementSelfBuffDurationTicks() {
+        return hurlementSelfBuffDurationTicks;
+    }
+
+    public int hurlementSelfBuffAmplifier() {
+        return hurlementSelfBuffAmplifier;
     }
 
     public int auraCost() {

@@ -1,6 +1,7 @@
 package fr.lycania.originel.network;
 
 import fr.lycania.originel.OriginelMod;
+import fr.lycania.originel.redmoon.RedMoonState;
 import fr.lycania.originel.skill.SkillActivation;
 import fr.lycania.originel.skill.SkillUnlock;
 import fr.lycania.originel.util.OriginelText;
@@ -23,6 +24,12 @@ public final class OriginelPacketHandler {
                 OriginelPacketHandler::handleUseSkill);
         registrar.playToServer(ServerboundUnlockSkillPacket.TYPE, ServerboundUnlockSkillPacket.CODEC,
                 OriginelPacketHandler::handleUnlockSkill);
+        registrar.playToClient(ClientboundRedMoonStatePacket.TYPE, ClientboundRedMoonStatePacket.CODEC,
+                OriginelPacketHandler::handleRedMoonState);
+    }
+
+    private static void handleRedMoonState(ClientboundRedMoonStatePacket packet, net.neoforged.neoforge.network.handling.IPayloadContext context) {
+        context.enqueueWork(() -> RedMoonState.setActive(packet.active()));
     }
 
     private static void handleUseSkill(ServerboundUseSkillPacket packet, net.neoforged.neoforge.network.handling.IPayloadContext context) {
