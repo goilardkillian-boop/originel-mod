@@ -3,6 +3,7 @@
   "faction.originel.hybride.plural": "Hybrids",
   "item.originel.dague_originel": "Dagger of the Originel",
   "item.originel.dague_originel.tooltip": "The only blade capable of wounding Corvin, the Hybrid.",
+  "item.originel.dague_originel.tooltip.ritual": "Sneak + right-click with Guardian's Blood in your off hand to soak it.",
   "item.originel.pierre_clair_de_lune": "Moonlight Stone",
   "item.originel.sang_gardien": "Guardian's Blood",
   "item.originel.eclat_voile": "Veil Shard",
@@ -43,5 +44,59 @@
   "skill.originel.commandement.desc": "Marks a target with a lingering glow.",
 
   "skill.originel.colere_originel": "Wrath of the Originel",
-  "skill.originel.colere_originel.desc": "Temporarily unleashes the power of all three branches."
+  "skill.originel.colere_originel.desc": "Temporarily unleashes the power of all three branches.",
+
+  "originel.msg.reload_done": "Configuration reloaded.",
+  "originel.msg.not_whitelisted": "failed: %s is not the whitelisted player for the Hybrid faction.",
+  "originel.msg.set_success": "%s is now the Hybrid.",
+  "originel.msg.not_hybride": "%s is not the Hybrid.",
+  "originel.msg.remove_success": "%s is no longer the Hybrid.",
+  "originel.msg.level_set": "%s is now level %s.",
+  "originel.msg.scellement_lore": "A seal closes upon the Originel. Its weakness awakens.",
+  "originel.msg.scellement_success": "%s is sealed for %ss.",
+  "originel.msg.lunerouge_already_active": "The Red Moon is already active.",
+  "originel.msg.lunerouge_start": "The Red Moon rises.",
+  "originel.msg.lunerouge_not_active": "The Red Moon is not active.",
+  "originel.msg.lunerouge_stop": "The Red Moon fades.",
+  "originel.msg.rituel_start_success": "The Hybridation Ritual begins.",
+
+  "originel.msg.autel_component_deposited": "A ritual component is placed on the altar.",
+  "originel.msg.autel_complete": " The Altar of the Veil is complete.",
+
+  "originel.msg.skill_unknown": "Unknown skill: %s",
+  "originel.msg.skill_already_unlocked": "%s already unlocked %s.",
+  "originel.msg.skill_requires_max_level": "%s requires the maximum level (%s).",
+  "originel.msg.skill_not_enough_points": "Not enough skill points (%s/%s).",
+  "originel.msg.skill_unlocked_target": "Skill unlocked: %s.",
+  "originel.msg.skill_unlocked_staff_feedback": "%s unlocked %s (remaining points: %s).",
+
+  "originel.msg.regard_success": "The Originel's gaze paralyzes %s.",
+  "originel.msg.regard_no_target": "No target within the Originel's gaze.",
+  "originel.msg.brume_success": "The Originel dissolves into mist and reforms further away.",
+  "originel.msg.griffes_success": "The Originel leaps forward, claws first.",
+  "originel.msg.metamorphose_on": "The Originel sheds its human disguise.",
+  "originel.msg.metamorphose_off": "The Originel resumes human form.",
+  "originel.msg.commandement_success": "%s is marked by the Originel.",
+  "originel.msg.commandement_no_target": "No target for Command.",
+  "originel.msg.colere_success": "The Wrath of the Originel is unleashed!",
+
+  "originel.msg.impregnation_success": "The Dagger of the Originel soaks up the Guardian's Blood.",
+  "originel.msg.impregnation_already": "The Dagger of the Originel is already soaked in Guardian's Blood.",
+  "originel.msg.impregnation_not_enough_blood": "You need %s Guardian's Blood in your off hand for this ritual.",
+
+  "originel.msg.give_simple": "%s given to %s.",
+  "originel.msg.give_dague": "Dagger of the Originel given to %s.",
+  "originel.msg.give_dague_imbibee": "Dagger of the Originel given to %s (soaked in Guardian's Blood).",
+  "originel.msg.give_carnet": "Corvin's Notebook given to %s.",
+
+  "gui.originel.skill_tree.title": "Originel's Skill Tree",
+  "gui.originel.skill_tree.points": "Skill points: %s",
+  "gui.originel.skill_tree.unlocked_suffix": " (unlocked)",
+  "gui.originel.skill_tree.requires_max_level": "Requires the maximum level (%s).",
+  "gui.originel.skill_tree.not_enough_points": "Not enough points (cost %s).",
+  "branch.originel.sang": "Blood",
+  "branch.originel.lune": "Moon",
+  "branch.originel.originel": "Originel",
+  "branch.originel.ultime": "Ultimate",
+  "key.originel.skill_tree": "Open skill tree"
 }

@@ -3,7 +3,6 @@ package fr.lycania.originel.item;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.WrittenBookItem;
 import fr.lycania.originel.OriginelMod;
 import fr.lycania.originel.block.OriginelBlocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -28,7 +27,7 @@ public final class OriginelItems {
             props -> new Item(props.stacksTo(16).rarity(Rarity.UNCOMMON)));
 
     public static final DeferredHolder<Item, Item> CARNET_CORVIN = ITEMS.registerItem("carnet_corvin",
-            props -> new WrittenBookItem(props.stacksTo(1).rarity(Rarity.RARE)));
+            props -> new CarnetCorvinItem(props.stacksTo(1).rarity(Rarity.RARE)));
 
     public static final DeferredItem<BlockItem> AUTEL_DU_VOILE = ITEMS.registerSimpleBlockItem(
             "autel_du_voile", OriginelBlocks.AUTEL_DU_VOILE, new Item.Properties().rarity(Rarity.UNCOMMON));

@@ -1,6 +1,7 @@
 package fr.lycania.originel.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import fr.lycania.originel.client.gui.SkillTreeScreen;
 import fr.lycania.originel.client.gui.SkillWheelScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -15,11 +16,15 @@ public final class OriginelKeys {
     public static final KeyMapping SKILL_WHEEL =
             new KeyMapping("key.originel.skill_wheel", InputConstants.Type.KEYSYM, InputConstants.KEY_K, CATEGORY);
 
+    public static final KeyMapping SKILL_TREE =
+            new KeyMapping("key.originel.skill_tree", InputConstants.Type.KEYSYM, InputConstants.KEY_L, CATEGORY);
+
     private OriginelKeys() {
     }
 
     public static void register(RegisterKeyMappingsEvent event) {
         event.register(SKILL_WHEEL);
+        event.register(SKILL_TREE);
     }
 
     @SubscribeEvent
@@ -27,13 +32,14 @@ public final class OriginelKeys {
         if (event.getAction() != InputConstants.PRESS) {
             return;
         }
-        if (!SKILL_WHEEL.isDown()) {
-            return;
-        }
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.screen != null) {
             return;
         }
-        SkillWheelScreen.show();
+        if (SKILL_WHEEL.isDown()) {
+            SkillWheelScreen.show();
+        } else if (SKILL_TREE.isDown()) {
+            SkillTreeScreen.show();
+        }
     }
 }

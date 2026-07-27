@@ -50,7 +50,7 @@ public final class SkillWheelScreen extends GuiRadialMenu {
             int remaining = onCooldown ? (int) ((readyAt - now) / 20L) : 0;
             ResourceLocation icon = ResourceLocation.fromNamespaceAndPath(OriginelMod.MODID, "textures/skill/" + skill.id() + ".png");
             slots.add(new RadialSlot(skill.id(), skill.displayName(),
-                    Component.translatable("skill.originel." + skill.id() + ".desc"), icon, onCooldown, remaining));
+                    skill.description(), icon, onCooldown, remaining));
         }
 
         if (slots.isEmpty()) {

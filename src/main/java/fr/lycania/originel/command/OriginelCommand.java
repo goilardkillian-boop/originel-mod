@@ -26,6 +26,7 @@ import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -84,7 +85,7 @@ public final class OriginelCommand {
 
     private static int executeReload(CommandContext<CommandSourceStack> context) {
         OriginelConfig.reloadAll();
-        context.getSource().sendSuccess(() -> OriginelText.prefixed("Configuration rechargee."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable("originel.msg.reload_done")), true);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -92,26 +93,26 @@ public final class OriginelCommand {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         HybrideFaction.AssignResult result = HybrideFaction.assign(target);
         if (result == HybrideFaction.AssignResult.NOT_WHITELISTED) {
-            context.getSource().sendFailure(OriginelText.prefixed(
-                    "echec : " + target.getName().getString() + " n'est pas le joueur whitelist pour la faction Hybride."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable(
+                    "originel.msg.not_whitelisted", target.getName().getString())));
             return 0;
         }
         target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().assignMessage()));
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                target.getName().getString() + " est desormais l'Hybride."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.set_success", target.getName().getString())), true);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int executeRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         if (!HybrideFaction.remove(target)) {
-            context.getSource().sendFailure(OriginelText.prefixed(
-                    target.getName().getString() + " n'est pas l'Hybride."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable(
+                    "originel.msg.not_hybride", target.getName().getString())));
             return 0;
         }
         target.sendSystemMessage(OriginelText.lore(HybrideConfig.get().removeMessage()));
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                target.getName().getString() + " n'est plus l'Hybride."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.remove_success", target.getName().getString())), true);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -119,51 +120,52 @@ public final class OriginelCommand {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         int level = IntegerArgumentType.getInteger(context, "niveau");
         if (!HybrideFaction.isHybride(target)) {
-            context.getSource().sendFailure(OriginelText.prefixed(
-                    target.getName().getString() + " n'est pas l'Hybride."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable(
+                    "originel.msg.not_hybride", target.getName().getString())));
             return 0;
         }
         int max = HybrideFaction.get().getHighestReachableLevel();
         int clamped = Math.min(Math.max(level, 1), max);
         IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(target);
         handler.setFactionLevel(HybrideFaction.get(), clamped);
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                target.getName().getString() + " est maintenant niveau " + clamped + "."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.level_set", target.getName().getString(), clamped)), true);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int executeScellement(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         if (!HybrideFaction.isHybride(target)) {
-            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " n'est pas l'Hybride."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable(
+                    "originel.msg.not_hybride", target.getName().getString())));
             return 0;
         }
         HybridePlayer data = target.getData(HybrideAttachments.HYBRIDE_PLAYER);
         long expiry = target.level().getGameTime() + FaiblesseConfig.get().scellementDurationTicks();
         data.setScellementExpiry(expiry);
-        target.sendSystemMessage(OriginelText.lore("Un sceau se referme sur l'Originel. Sa faiblesse s'eveille."));
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                target.getName().getString() + " est scelle pour " + (FaiblesseConfig.get().scellementDurationTicks() / 20) + "s."), true);
+        target.sendSystemMessage(OriginelText.lore(Component.translatable("originel.msg.scellement_lore")));
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.scellement_success", target.getName().getString(), FaiblesseConfig.get().scellementDurationTicks() / 20)), true);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int executeLuneRougeStart(CommandContext<CommandSourceStack> context) {
         if (RedMoonState.isActive()) {
-            context.getSource().sendFailure(OriginelText.prefixed("La Lune Rouge est deja active."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable("originel.msg.lunerouge_already_active")));
             return 0;
         }
         RedMoonManager.start(context.getSource().getServer());
-        context.getSource().sendSuccess(() -> OriginelText.prefixed("La Lune Rouge se leve."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable("originel.msg.lunerouge_start")), true);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int executeLuneRougeStop(CommandContext<CommandSourceStack> context) {
         if (!RedMoonState.isActive()) {
-            context.getSource().sendFailure(OriginelText.prefixed("La Lune Rouge n'est pas active."));
+            context.getSource().sendFailure(OriginelText.prefixed(Component.translatable("originel.msg.lunerouge_not_active")));
             return 0;
         }
         RedMoonManager.stop(context.getSource().getServer());
-        context.getSource().sendSuccess(() -> OriginelText.prefixed("La Lune Rouge s'eteint."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable("originel.msg.lunerouge_stop")), true);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -180,7 +182,7 @@ public final class OriginelCommand {
             context.getSource().sendFailure(OriginelText.prefixed(message));
             return 0;
         }
-        context.getSource().sendSuccess(() -> OriginelText.prefixed("Le Rituel d'Hybridation commence."), true);
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable("originel.msg.rituel_start_success")), true);
         return Command.SINGLE_SUCCESS;
     }
 }

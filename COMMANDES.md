@@ -10,7 +10,7 @@ defaut 2).
 | `/originel set <joueur>` | Attribue la faction Hybride au joueur cible (doit etre en ligne). Echoue proprement si ce n'est pas le joueur whitelist dans `hybride.toml`. Force le changement s'il etait deja dans une autre faction (vampire/loup-garou). |
 | `/originel remove <joueur>` | Retire la faction Hybride au joueur cible (doit etre en ligne). |
 | `/originel level set <joueur> <n>` | Fixe le niveau d'Hybride du joueur (borne a `hybride.toml#progression.max_level`). Chaque niveau applique les bonus de stats configures et accorde des points de competence. |
-| `/originel skill give <joueur> <competence>` | Debloque une competence pour le joueur (doit etre l'Hybride), en depensant un point de competence. Echoue si la competence est deja debloquee, si le niveau requis n'est pas atteint (Colere de l'Originel : niveau max) ou si le joueur n'a pas assez de points. |
+| `/originel skill give <joueur> <competence>` | Debloque une competence pour le joueur (doit etre l'Hybride), en depensant un point de competence. Echoue si la competence est deja debloquee, si le niveau requis n'est pas atteint (Colere de l'Originel : niveau max) ou si le joueur n'a pas assez de points. Equivalent staff de l'arbre de competences (voir plus bas), que l'Hybride peut desormais utiliser lui-meme. |
 | `/originel skill use <joueur> <competence>` | Declenche une competence active deja debloquee (Regard hypnotique, Brume, Griffes, Metamorphose, Commandement, Colere de l'Originel). Respecte le delai de recharge configure. |
 | `/originel give dague_originel <joueur> [sang_gardien]` | Delivre la Dague de l'Originel (rare, non craftable). L'argument optionnel `sang_gardien` (true/false) determine si la lame porte deja le composant necessaire a la Faiblesse Cachee. |
 | `/originel give pierre_clair_de_lune <joueur>` | Delivre la Pierre de Clair de Lune, composant du Rituel d'Hybridation. |
@@ -37,13 +37,13 @@ tous configurables (cout, portee, duree, degats...) dans `skills.toml` :
 |---|---|---|---|
 | Sang | `velocite` | Passive | Vitesse de deplacement augmentee en permanence |
 | Sang | `regard_hypnotique` | Active | Ralentit la cible visee |
-| Sang | `morsure_vampirique` | Passive | Vol de vie au corps a corps |
+| Sang | `morsure_vampirique` | Passive | Vol de vie et de nourriture/saturation au corps a corps |
 | Sang | `brume` | Active | Court teleport dans la direction du regard |
 | Lune | `force_bestiale` | Passive | Degats d'attaque augmentes en permanence |
 | Lune | `sens_aiguises` | Passive | Vision nocturne + entites proches surlignees |
 | Lune | `griffes` | Active | Bond griffu, saignement autour de l'impact |
 | Lune | `peau_de_bete` | Passive | Degats subis reduits en permanence |
-| Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee (voir plus bas) |
+| Originel | `aura_abomination` | Passive | Signal discret aux joueurs des factions creatures a portee, et fait fuir les mobs vampires/loups-garous a portee (voir plus bas) |
 | Originel | `regeneration_impie` | Passive | Regeneration de vie en continu |
 | Originel | `metamorphose` | Active | Bascule un etat "transforme" (interne) |
 | Originel | `commandement` | Active | Marque la cible visee d'une lueur prolongee |
@@ -73,6 +73,45 @@ n'a pas pu etre verifie dans l'environnement de developpement de ce mod
 (pas de client graphique connectable) : merci de signaler tout probleme
 d'affichage ou de reactivite au clic.
 
+## Arbre de competences (interface)
+
+Le deblocage des competences n'est plus reserve au staff : l'Hybride peut
+depenser lui-meme ses points de competence via un **arbre de competences**
+en grille (une colonne par branche), affichant toutes les competences
+(actives et passives) avec leur cout et leur description au survol.
+
+- Touche par defaut : **L** (configurable, meme categorie que la roue).
+- Alternative "inventaire" : accroupi + clic droit sur le Carnet de Corvin
+  ouvre l'arbre au lieu de lire le livre (un clic droit normal, non
+  accroupi, continue de l'ouvrir en lecture comme avant).
+- Un bouton grise (non cliquable) signale une competence deja debloquee,
+  un niveau insuffisant (Colere de l'Originel : niveau max requis), ou pas
+  assez de points ; le survol precise laquelle de ces raisons s'applique.
+- Cliquer sur une competence disponible envoie une demande au serveur, qui
+  revalide tout exactement comme `/originel skill give` (meme logique
+  partagee, `SkillUnlock`) - le client ne fait que proposer.
+
+Comme pour la roue, le rendu reel (positionnement des colonnes, lisibilite,
+reactivite au clic) n'a pas pu etre verifie visuellement dans cet
+environnement de developpement.
+
+## Rituel d'impregnation de sang (Dague de l'Originel)
+
+La Dague de l'Originel ne peut blesser l'Hybride que si elle porte le
+composant "Sang de Gardien" (voir Faiblesse Cachee, etape 6). En plus de
+`/originel give dague_originel <joueur> sang_gardien:true` (staff), n'importe
+quel joueur possedant la dague peut desormais l'imbiber lui-meme en survie :
+
+1. Avoir la Dague de l'Originel en main principale et au moins
+   `impregnation.toml#ritual.blood_cost` (3 par defaut) Sang de Gardien en
+   main secondaire.
+2. Rester accroupi et faire un clic droit (dans le vide ou sur un bloc).
+3. La dague porte desormais le composant, le Sang de Gardien consomme
+   disparait, un son et des particules confirment le rituel.
+
+Echoue proprement (message explicite) si la dague est deja imbibee ou s'il
+n'y a pas assez de Sang de Gardien en main secondaire.
+
 ## Rituel d'Hybridation
 
 Deroule attendu (voir `rituel.toml` pour tous les parametres) :
@@ -90,11 +129,18 @@ Deroule attendu (voir `rituel.toml` pour tous les parametres) :
 
 Une fois la competence `aura_abomination` debloquee, l'Hybride emet une
 pulsation discrete toutes les `skills.toml#originel.aura_abomination.interval_ticks`,
-qui affecte chaque joueur des factions creatures (Vampirism ou Werewolves) a
-portee (`radius`, en blocs) : un message personnel discret (`message`, visible
-uniquement par la cible), un son entendu uniquement par elle (`sound`), et un
-malaise (Nausee, `malaise_duration_ticks` / `malaise_amplifier`). L'Hybride
-lui-meme n'est jamais affecte, et rien n'est diffuse publiquement.
+qui affecte a portee (`radius`, en blocs) :
+
+- chaque **joueur** des factions creatures (Vampirism ou Werewolves) : un
+  message personnel discret (`message`, visible uniquement par la cible),
+  un son entendu uniquement par elle (`sound`), et un malaise (Nausee,
+  `malaise_duration_ticks` / `malaise_amplifier`) ;
+- chaque **mob** (non-joueur) des memes factions : une poussee a l'oppose
+  de l'Hybride (`flee_knockback`) et un effet de Vitesse temporaire
+  (`flee_speed_amplifier` / `flee_effect_duration_ticks`) qui le fait fuir
+  tant que l'Hybride reste a portee.
+
+L'Hybride lui-meme n'est jamais affecte, et rien n'est diffuse publiquement.
 
 ## Anneau de Cendre
 

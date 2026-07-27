@@ -15,9 +15,9 @@ public class ActiveSkill extends Skill {
     private final Activation activation;
     private final IntSupplier cooldownTicksSupplier;
 
-    public ActiveSkill(String id, Branch branch, String displayName, IntSupplier costSupplier,
+    public ActiveSkill(String id, Branch branch, IntSupplier costSupplier,
                         IntSupplier cooldownTicksSupplier, Activation activation, boolean requiresMaxLevel) {
-        super(id, branch, SkillType.ACTIVE, displayName, costSupplier, requiresMaxLevel);
+        super(id, branch, SkillType.ACTIVE, costSupplier, requiresMaxLevel);
         this.cooldownTicksSupplier = cooldownTicksSupplier;
         this.activation = activation;
     }

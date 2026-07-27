@@ -11,15 +11,13 @@ public abstract class Skill {
     private final String id;
     private final Branch branch;
     private final SkillType type;
-    private final String displayName;
     private final IntSupplier costSupplier;
     private final boolean requiresMaxLevel;
 
-    protected Skill(String id, Branch branch, SkillType type, String displayName, IntSupplier costSupplier, boolean requiresMaxLevel) {
+    protected Skill(String id, Branch branch, SkillType type, IntSupplier costSupplier, boolean requiresMaxLevel) {
         this.id = id;
         this.branch = branch;
         this.type = type;
-        this.displayName = displayName;
         this.costSupplier = costSupplier;
         this.requiresMaxLevel = requiresMaxLevel;
     }
@@ -37,7 +35,11 @@ public abstract class Skill {
     }
 
     public Component displayName() {
-        return Component.literal(displayName);
+        return Component.translatable("skill.originel." + id);
+    }
+
+    public Component description() {
+        return Component.translatable("skill.originel." + id + ".desc");
     }
 
     public int cost() {

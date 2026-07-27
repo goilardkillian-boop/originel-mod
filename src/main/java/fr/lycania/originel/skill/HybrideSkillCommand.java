@@ -6,14 +6,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import fr.lycania.originel.command.CommandUtil;
 import fr.lycania.originel.faction.HybrideAttachments;
-import fr.lycania.originel.faction.HybrideFaction;
 import fr.lycania.originel.faction.HybridePlayer;
 import fr.lycania.originel.util.OriginelText;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -46,42 +44,15 @@ public final class HybrideSkillCommand {
         ServerPlayer target = EntityArgument.getPlayer(context, "joueur");
         String skillId = StringArgumentType.getString(context, "competence");
 
-        if (!HybrideFaction.isHybride(target)) {
-            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " n'est pas l'Hybride."));
+        SkillUnlock.Outcome outcome = SkillUnlock.tryUnlock(target, skillId);
+        if (!outcome.success()) {
+            context.getSource().sendFailure(OriginelText.prefixed(outcome.message()));
             return 0;
         }
-        var skillOpt = SkillRegistry.byId(skillId);
-        if (skillOpt.isEmpty()) {
-            context.getSource().sendFailure(OriginelText.prefixed("Competence inconnue : " + skillId));
-            return 0;
-        }
-        Skill skill = skillOpt.get();
         HybridePlayer data = target.getData(HybrideAttachments.HYBRIDE_PLAYER);
-
-        if (data.hasSkill(skillId)) {
-            context.getSource().sendFailure(OriginelText.prefixed(target.getName().getString() + " a deja debloque " + skillId + "."));
-            return 0;
-        }
-        if (skill.requiresMaxLevel()) {
-            IFactionPlayerHandler handler = VampirismAPI.factionPlayerHandler(target);
-            int max = HybrideFaction.get().getHighestReachableLevel();
-            if (handler.getCurrentLevel(HybrideFaction.get()) < max) {
-                context.getSource().sendFailure(OriginelText.prefixed(skillId + " necessite le niveau maximum (" + max + ")."));
-                return 0;
-            }
-        }
-        if (data.getSkillPoints() < skill.cost()) {
-            context.getSource().sendFailure(OriginelText.prefixed(
-                    "Pas assez de points de competence (" + data.getSkillPoints() + "/" + skill.cost() + ")."));
-            return 0;
-        }
-        data.addSkillPoints(-skill.cost());
-        data.unlockSkill(skillId);
-        skill.onUnlock(target, data);
-        target.syncData(HybrideAttachments.HYBRIDE_PLAYER);
-        target.sendSystemMessage(OriginelText.prefixed("Competence debloquee : " + skillId + "."));
-        context.getSource().sendSuccess(() -> OriginelText.prefixed(
-                target.getName().getString() + " a debloque " + skillId + " (points restants : " + data.getSkillPoints() + ")."), true);
+        target.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.skill_unlocked_target", skillId)));
+        context.getSource().sendSuccess(() -> OriginelText.prefixed(Component.translatable(
+                "originel.msg.skill_unlocked_staff_feedback", target.getName().getString(), skillId, data.getSkillPoints())), true);
         return Command.SINGLE_SUCCESS;
     }
 

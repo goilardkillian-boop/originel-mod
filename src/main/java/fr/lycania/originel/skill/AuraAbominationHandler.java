@@ -16,6 +16,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -66,10 +68,25 @@ public final class AuraAbominationHandler {
                         cfg.auraMalaiseDurationTicks(), cfg.auraMalaiseAmplifier()));
             }
         }
+
+        for (LivingEntity mob : hybride.level().getEntitiesOfClass(LivingEntity.class,
+                hybride.getBoundingBox().inflate(cfg.auraRadius()),
+                e -> !(e instanceof ServerPlayer) && e.isAlive() && isCreatureFaction(e))) {
+            Vec3 away = mob.position().subtract(hybride.position());
+            if (away.lengthSqr() > 1.0e-4) {
+                away = away.normalize().scale(cfg.auraFleeKnockback());
+                mob.setDeltaMovement(mob.getDeltaMovement().add(away.x, Math.max(0, away.y * 0.2), away.z));
+                mob.hurtMarked = true;
+            }
+            if (cfg.auraFleeEffectDurationTicks() > 0) {
+                mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED,
+                        cfg.auraFleeEffectDurationTicks(), cfg.auraFleeSpeedAmplifier()));
+            }
+        }
     }
 
-    private static boolean isCreatureFaction(ServerPlayer player) {
-        var faction = VampirismAPI.factionRegistry().getFaction(player);
+    private static boolean isCreatureFaction(LivingEntity entity) {
+        var faction = VampirismAPI.factionRegistry().getFaction(entity);
         return faction == VReference.VAMPIRE_FACTION || faction == WReference.WEREWOLF_FACTION;
     }
 }

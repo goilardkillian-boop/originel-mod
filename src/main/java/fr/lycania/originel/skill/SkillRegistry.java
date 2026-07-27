@@ -6,6 +6,7 @@ import fr.lycania.originel.faction.HybridePlayer;
 import fr.lycania.originel.util.OriginelText;
 import fr.lycania.originel.util.TargetingUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -59,7 +60,7 @@ public final class SkillRegistry {
         SkillsConfig cfg = SkillsConfig.get();
 
         // --- Branche Sang ---
-        register(new PassiveSkill("velocite", Branch.SANG, "Velocite", cfg::velociteCost,
+        register(new PassiveSkill("velocite", Branch.SANG, cfg::velociteCost,
                 (player, data) -> {
                     AttributeInstance instance = player.getAttribute(Attributes.MOVEMENT_SPEED);
                     if (instance != null) {
@@ -74,32 +75,33 @@ public final class SkillRegistry {
                     }
                 }));
 
-        register(new ActiveSkill("regard_hypnotique", Branch.SANG, "Regard hypnotique", cfg::regardCost, cfg::regardCooldownTicks,
+        register(new ActiveSkill("regard_hypnotique", Branch.SANG, cfg::regardCost, cfg::regardCooldownTicks,
                 (player, data) -> {
                     Optional<LivingEntity> target = TargetingUtil.getLookedAtEntity(player, cfg.regardRange());
                     if (target.isPresent()) {
                         target.get().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
                                 cfg.regardDurationTicks(), cfg.regardSlownessAmplifier()));
-                        player.sendSystemMessage(OriginelText.prefixed("Le regard de l'Originel paralyse " + target.get().getName().getString() + "."));
+                        player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
+                                "originel.msg.regard_success", target.get().getName().getString())));
                     } else {
-                        player.sendSystemMessage(OriginelText.prefixed("Aucune cible dans le regard de l'Originel."));
+                        player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.regard_no_target")));
                     }
                 }, false));
 
-        register(new Skill("morsure_vampirique", Branch.SANG, SkillType.PASSIVE, "Morsure vampirique", cfg::morsureCost, false) {
+        register(new Skill("morsure_vampirique", Branch.SANG, SkillType.PASSIVE, cfg::morsureCost, false) {
         });
 
-        register(new ActiveSkill("brume", Branch.SANG, "Brume", cfg::brumeCost, cfg::brumeCooldownTicks,
+        register(new ActiveSkill("brume", Branch.SANG, cfg::brumeCost, cfg::brumeCooldownTicks,
                 (player, data) -> {
                     Vec3 look = player.getLookAngle();
                     player.teleportTo(player.getX() + look.x * cfg.brumeDistance(),
                             player.getY() + Math.max(0, look.y) * cfg.brumeDistance() * 0.3,
                             player.getZ() + look.z * cfg.brumeDistance());
-                    player.sendSystemMessage(OriginelText.prefixed("L'Originel se dissout en brume et se reforme plus loin."));
+                    player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.brume_success")));
                 }, false));
 
         // --- Branche Lune ---
-        register(new PassiveSkill("force_bestiale", Branch.LUNE, "Force bestiale", cfg::forceBestialeCost,
+        register(new PassiveSkill("force_bestiale", Branch.LUNE, cfg::forceBestialeCost,
                 (player, data) -> {
                     AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
                     if (instance != null) {
@@ -114,7 +116,7 @@ public final class SkillRegistry {
                     }
                 }));
 
-        register(new PassiveSkill("sens_aiguises", Branch.LUNE, "Sens aiguises", cfg::sensAiguisesCost,
+        register(new PassiveSkill("sens_aiguises", Branch.LUNE, cfg::sensAiguisesCost,
                 (player, data) -> {
                     player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, true, false));
                     for (LivingEntity nearby : player.level().getEntitiesOfClass(LivingEntity.class,
@@ -125,7 +127,7 @@ public final class SkillRegistry {
                 },
                 null));
 
-        register(new ActiveSkill("griffes", Branch.LUNE, "Griffes", cfg::griffesCost, cfg::griffesCooldownTicks,
+        register(new ActiveSkill("griffes", Branch.LUNE, cfg::griffesCost, cfg::griffesCooldownTicks,
                 (player, data) -> {
                     Vec3 look = player.getLookAngle();
                     player.setDeltaMovement(look.x * cfg.griffesLeapStrength(), Math.max(0.3, look.y * cfg.griffesLeapStrength()), look.z * cfg.griffesLeapStrength());
@@ -134,42 +136,42 @@ public final class SkillRegistry {
                             player.getBoundingBox().inflate(3.0), e -> e != player && e.isAlive())) {
                         nearby.addEffect(new MobEffectInstance(MobEffects.POISON, cfg.griffesBleedDurationTicks(), 0));
                     }
-                    player.sendSystemMessage(OriginelText.prefixed("L'Originel bondit, griffes en avant."));
+                    player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.griffes_success")));
                 }, false));
 
-        register(new Skill("peau_de_bete", Branch.LUNE, SkillType.PASSIVE, "Peau de bete", cfg::peauDeBeteCost, false) {
+        register(new Skill("peau_de_bete", Branch.LUNE, SkillType.PASSIVE, cfg::peauDeBeteCost, false) {
         });
 
         // --- Branche Originel ---
-        register(new Skill("aura_abomination", Branch.ORIGINEL, SkillType.PASSIVE, "Aura d'Abomination", cfg::auraCost, false) {
+        register(new Skill("aura_abomination", Branch.ORIGINEL, SkillType.PASSIVE, cfg::auraCost, false) {
         });
 
-        register(new PassiveSkill("regeneration_impie", Branch.ORIGINEL, "Regeneration impie", cfg::regenerationImpieCost,
+        register(new PassiveSkill("regeneration_impie", Branch.ORIGINEL, cfg::regenerationImpieCost,
                 (player, data) -> player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, cfg.regenerationImpieAmplifier(), true, false)),
                 null));
 
-        register(new ActiveSkill("metamorphose", Branch.ORIGINEL, "Metamorphose", cfg::metamorphoseCost, cfg::metamorphoseCooldownTicks,
+        register(new ActiveSkill("metamorphose", Branch.ORIGINEL, cfg::metamorphoseCost, cfg::metamorphoseCooldownTicks,
                 (player, data) -> {
                     boolean now = !data.isTransformed();
                     data.setTransformed(now);
-                    player.sendSystemMessage(OriginelText.prefixed(now
-                            ? "L'Originel abandonne son masque humain."
-                            : "L'Originel reprend forme humaine."));
+                    player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
+                            now ? "originel.msg.metamorphose_on" : "originel.msg.metamorphose_off")));
                 }, false));
 
-        register(new ActiveSkill("commandement", Branch.ORIGINEL, "Commandement", cfg::commandementCost, cfg::commandementCooldownTicks,
+        register(new ActiveSkill("commandement", Branch.ORIGINEL, cfg::commandementCost, cfg::commandementCooldownTicks,
                 (player, data) -> {
                     Optional<LivingEntity> target = TargetingUtil.getLookedAtEntity(player, 16);
                     if (target.isPresent()) {
                         target.get().addEffect(new MobEffectInstance(MobEffects.GLOWING, cfg.commandementDurationTicks(), 0));
-                        player.sendSystemMessage(OriginelText.prefixed(target.get().getName().getString() + " est marque par l'Originel."));
+                        player.sendSystemMessage(OriginelText.prefixed(Component.translatable(
+                                "originel.msg.commandement_success", target.get().getName().getString())));
                     } else {
-                        player.sendSystemMessage(OriginelText.prefixed("Aucune cible pour le Commandement."));
+                        player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.commandement_no_target")));
                     }
                 }, false));
 
         // --- Ultime ---
-        register(new ActiveSkill("colere_originel", Branch.ULTIME, "Colere de l'Originel", cfg::colereCost, cfg::colereCooldownTicks,
+        register(new ActiveSkill("colere_originel", Branch.ULTIME, cfg::colereCost, cfg::colereCooldownTicks,
                 (player, data) -> {
                     long expiry = player.level().getGameTime() + cfg.colereDurationTicks();
                     applyModifier(player, Attributes.MOVEMENT_SPEED, COLERE_SPEED_MODIFIER,
@@ -177,7 +179,7 @@ public final class SkillRegistry {
                     applyModifier(player, Attributes.ATTACK_DAMAGE, COLERE_DAMAGE_MODIFIER,
                             cfg.forceBestialeDamageBonus() * (cfg.colereMultiplier() - 1), AttributeModifier.Operation.ADD_VALUE);
                     data.setCooldownExpiry("colere_originel_expiry", expiry);
-                    player.sendSystemMessage(OriginelText.prefixed("La Colere de l'Originel se dechaine !"));
+                    player.sendSystemMessage(OriginelText.prefixed(Component.translatable("originel.msg.colere_success")));
                 }, true));
     }
 
